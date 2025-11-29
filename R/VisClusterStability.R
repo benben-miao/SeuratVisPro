@@ -1,0 +1,47 @@
+#' @title Cluster stability across resolutions
+#' @description Assess clustering stability by resampling cells and varying resolution.
+#' @param object A `Seurat` object with PCA computed.
+#' @param resolution_range Numeric vector of resolutions, e.g., `seq(0.2, 1.2, by=0.2)`.
+#' @param dims PCA dimensions to use.
+#' @param reps Number of resampling repetitions.
+#' @param prop Proportion of cells to sample per repetition.
+#' @param palette Viridis palette option.
+#' @return A list with `summary` data.frame and a ggplot summarizing stability.
+#' @examples
+#' obj <- SeuratVisProExample()
+#' res <- VisClusterStability(obj, resolution_range = seq(0.2,1,0.2))
+#' res$plot
+#' @export
+VisClusterStability <- function(object, resolution_range = seq(0.2, 1.2, by = 0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C") {
+  svpp_check_seurat_object(object)
+  if (is.null(object@reductions$pca)) object <- Seurat::RunPCA(object)
+  object <- Seurat::FindNeighbors(object, dims = dims)
+  full_clusters <- lapply(resolution_range, function(r) {
+    as.character(Seurat::FindClusters(object, resolution = r)$seurat_clusters)
+  })
+  names(full_clusters) <- paste0("res_", resolution_range)
+  stability <- dplyr::tibble(resolution = numeric(), agreement = numeric())
+  cells <- colnames(object)
+  for (r in resolution_range) {
+    base_obj <- Seurat::FindClusters(object, resolution = r)
+    base_assign <- as.character(base_obj$seurat_clusters)
+    names(base_assign) <- colnames(base_obj)
+    agree_vec <- numeric(reps)
+    for (i in seq_len(reps)) {
+      set.seed(i)
+      sub_cells <- sample(cells, size = floor(length(cells) * prop))
+      sub_obj <- subset(object, cells = sub_cells)
+      sub_obj <- Seurat::FindNeighbors(sub_obj, dims = dims)
+      sub_obj <- Seurat::FindClusters(sub_obj, resolution = r)
+      sub_assign <- as.character(sub_obj$seurat_clusters)
+      names(sub_assign) <- colnames(sub_obj)
+      common <- intersect(names(base_assign), names(sub_assign))
+      agree <- mean(base_assign[common] == sub_assign[common])
+      agree_vec[i] <- agree
+    }
+    stability <- dplyr::bind_rows(stability, dplyr::tibble(resolution = r, agreement = mean(agree_vec)))
+  }
+  p <- ggplot2::ggplot(stability, ggplot2::aes(x = resolution, y = agreement)) + ggplot2::geom_line(color = "grey30") + ggplot2::geom_point(ggplot2::aes(color = agreement)) +
+    ggplot2::scale_color_viridis_c(option = palette) + ggplot2::scale_y_continuous(limits = c(0, 1)) + svpp_theme() + ggplot2::labs(y = "Agreement (resampled)")
+  list(summary = stability, plot = p)
+}

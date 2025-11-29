@@ -1,0 +1,7 @@
+^Rplots\.pdf$
+^_pkgdown\.yml$
+^docs$
+^paper\.md$
+^vignettes$
+^.*\.Rproj$
+^\.Rproj\.user$

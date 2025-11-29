@@ -1,0 +1,38 @@
+Package: SeuratVisPro
+Type: Package
+Title: Innovative Visualization and Analysis Toolkit for Seurat v5
+Version: 0.1.0
+URL: https://example.com/SeuratVisPro
+BugReports: https://example.com/SeuratVisPro/issues
+Authors@R: person(given = "SeuratVisPro", family = "Team", role = c("aut","cre"), email = "dev@seuratvispro.local")
+Description: A collection of innovative functions that address common pain points in single-cell RNA-seq analysis and visualization using Seurat v5. Includes interactive QC, cluster stability assessment, marker atlas visualization, batch mixing diagnostics, gene trend plotting, ligand-receptor scoring, cluster dendrograms, spatial overlays, module score visualization, and cell cycle views. Ships with a Shiny app to explore key features.
+Depends: R (>= 4.2)
+Imports:
+    ggplot2,
+    dplyr,
+    tidyr,
+    patchwork,
+    shiny,
+    stats,
+    methods,
+    tibble,
+    ggdendro,
+    plotly,
+    rlang,
+    tidyselect,
+    Seurat,
+    scales,
+    Matrix,
+    DT
+Suggests:
+    knitr (>= 1.0),
+    rmarkdown,
+    pkgdown,
+    testthat (>= 3.0.0),
+    bs4Dash
+VignetteBuilder: knitr
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

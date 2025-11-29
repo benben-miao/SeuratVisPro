@@ -1,0 +1,36 @@
+template:
+  bootstrap: 5
+  bootswatch: flatly
+url: https://example.com/SeuratVisPro
+destination: docs
+navbar:
+  structure:
+    left: [reference, articles]
+    right: [news]
+articles:
+  - title: Tutorial
+    contents:
+      - SeuratVisPro
+reference:
+  - title: Core functions
+    contents:
+      - VisQCPanel
+      - VisClusterStability
+      - VisMarkerAtlas
+      - VisBatchAlign
+      - VisGeneTrend
+      - VisLigRec
+      - VisClusterTree
+      - VisSpatialOverlay
+      - VisMetaFeature
+      - VisCellCycle
+      - SeuratVisProExample
+      - launchSeuratVisPro
+  - title: Innovative visuals
+    contents:
+      - VisEmbeddingContour
+      - VisRankedDotmap
+      - VisGeneCoexpHive
+      - VisHexEntropy
+      - VisLocalMoran
+      - VisClusterFlowGraph
