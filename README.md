@@ -1,25 +1,25 @@
 # SeuratVisPro
 
-面向Seurat v5的创新型单细胞可视化与分析工具包。聚焦真实项目痛点，提供聚类稳健性诊断、批次混合评估、群体标志物图谱、配体-受体方向评分、趋势曲线、群体树与相似性热图、空间叠色回退、发表级点图以及基因协同结构径向网络等功能，并集成Shiny（支持bs4Dash可选）便于交互探索。
+Innovative visualization and analysis toolkit for Seurat v5. Focused on real-world workflows, it provides cluster stability diagnostics, batch mixing assessment, marker atlas, ligand–receptor directional scoring, expression trend curves, cluster tree with similarity heatmap, spatial overlay with non-spatial fallback, publication-ready dotmap, and a radial gene co-expression network. A bundled Shiny app (optional `bs4Dash`) enables interactive exploration.
 
-## 设计理由与优势
+## Rationale & Benefits
 
-- 聚类稳健性：分辨率×重采样一致性曲线定量选择超参，补足官方工作流的“稳健性度量”。
-- 批次混合诊断：嵌入空间邻域批次差异比例快速定位整合问题群体。
-- 标志物与相似性：Marker atlas与群体树+热图组合，多视角呈现群体差异与近似程度。
-- 通信与趋势：群体×群体LR共表达热图与伪时间/分组平滑曲线，便于机制与时序分析。
-- 空间回退：无真实图像也可依赖坐标/嵌入进行“空间式”叠色，保障工作流不中断。
-- 发表级美化：统一`svpp_theme()`与`viridis`色系参数化，图形风格一致可控。
+- Cluster stability: resolution × resampling agreement curves to select hyperparameters quantitatively — adding a missing stability metric to standard workflows.
+- Batch mixing diagnostics: neighborhood batch difference proportion on embeddings to quickly locate integration issues.
+- Markers & similarity: marker atlas plus cluster tree + similarity heatmap for multi-view understanding of group differences and proximity.
+- Signaling & trends: LR co-expression heatmap across groups and pseudotime/group-based smoothed trends for mechanism and temporal analysis.
+- Spatial fallback: if no images are available, overlay via `x,y` or embedding coordinates to keep workflows unblocked.
+- Publication styling: unified `svpp_theme()` and `viridis` palettes for consistent, controllable visuals.
 
-## 方法细节
+## Method Details
 
-- 稳健性：`VisClusterStability` 对每个分辨率进行重复抽样，按细胞名对齐完整与子样本的簇分配，计算一致性均值并绘制曲线。
-- 批次：`VisBatchAlign` 在嵌入上构建k近邻（基于距离排序），统计邻居批次与自身差异比例，分组比较混合程度。
-- 树与热图：`VisClusterTree` 基于群体平均表达，支持欧氏或相关性度量与多种联接法，树下叠加相似性热图。
-- 通信：`VisLigRec` 基于平均表达计算LR对在源/靶群体的乘积均值，形成方向性评分矩阵。
-- 趋势：`VisGeneTrend` 从UMAP/PCA近似伪时间或任意元数据分组，绘制loess/gam平滑曲线。
-- 空间：`VisSpatialOverlay` 优先使用`SpatialFeaturePlot`，无图像时回退至`x,y`或嵌入坐标点染色。
-- 点图与网络：`VisRankedDotmap` 合并平均表达与表达比例，`VisGeneCoexpHive` 使用相关性构建径向网络。
+- Stability: `VisClusterStability` resamples per resolution, aligns cluster assignments by cell names, computes mean agreement, and plots curves.
+- Batch: `VisBatchAlign` builds kNN on embeddings (distance-based), measures neighbor batch difference vs self, and compares across groups.
+- Tree & heatmap: `VisClusterTree` uses group-average expression, supports Euclidean/correlation distances and multiple linkages, with a similarity heatmap.
+- Signaling: `VisLigRec` computes LR source/target products from averages to form a directional score matrix.
+- Trends: `VisGeneTrend` derives pseudotime from UMAP/PCA or uses metadata grouping; plots loess/GAM smoothed curves.
+- Spatial: `VisSpatialOverlay` prefers `SpatialFeaturePlot`; falls back to `x,y` or embeddings otherwise.
+- Dotmap & network: `VisRankedDotmap` combines mean expression and percent; `VisGeneCoexpHive` builds a radial network from correlations.
 
 ## 快速开始
 
@@ -33,88 +33,88 @@ VisRankedDotmap(obj, group.by = 'seurat_clusters', top_n = 6)
 VisGeneCoexpHive(obj, genes = paste0('G',1:12), threshold = 0.2)
 ```
 
-## 全函数示例
+## Full Function Examples
 
 ```r
 library(SeuratVisPro)
 obj <- SeuratVisProExample(n_cells=400, n_genes=800, n_clusters=4, spatial=TRUE)
 obj$batch <- sample(c('A','B'), ncol(obj), replace=TRUE)
 
-# 1) 质控面板（静态）
+# 1) QC panel (static)
 VisQCPanel(obj, genes_mt='^MT-', genes_ribo='^RPL|^RPS', group.by='seurat_clusters')
 
-# 2) 聚类稳健性
+# 2) Cluster stability
 stab <- VisClusterStability(obj, resolution_range=seq(0.2,1.2,0.2), reps=3)
 stab$plot; head(stab$summary)
 
-# 3) 标志物图谱
+# 3) Marker atlas
 ma <- VisMarkerAtlas(obj, top_n=5)
 ma$plot; head(ma$markers)
 
-# 4) 批次混合诊断
+# 4) Batch mixing diagnostics
 ba <- VisBatchAlign(obj, batch='batch', reduction='pca')
 ba$plot; head(ba$summary)
 
-# 5) 基因趋势（伪时间或分组）
+# 5) Gene trends (pseudotime or group)
 VisGeneTrend(obj, features=c('G10','G20','G30'), by='pseudotime')
 
-# 6) 配体-受体方向评分
+# 6) Ligand–receptor directional scores
 lr <- data.frame(ligand=paste0('G',1:5), receptor=paste0('G',6:10))
 lrres <- VisLigRec(obj, lr_table=lr, group.by='seurat_clusters')
 lrres$plot; head(lrres$scores)
 
-# 7) 模块分数（元特征）
+# 7) Module scores (meta features)
 ms <- VisMetaFeature(obj, feature_sets=list(SetA=paste0('G',1:10), SetB=paste0('G',11:20)), group.by='seurat_clusters')
 ms$plot
 
-# 8) 细胞周期视图
+# 8) Cell cycle view
 cc <- VisCellCycle(obj, s.genes=paste0('G',1:10), g2m.genes=paste0('G',11:20))
 cc$plot
 
-# 9) 嵌入等高线（原创）
+# 9) Embedding contours (innovative)
 VisEmbeddingContour(obj, group.by='seurat_clusters', levels=5)
 
-# 10) 排序点图（原创）
+# 10) Ranked dotmap (innovative)
 VisRankedDotmap(obj, group.by='seurat_clusters', top_n=6)
 
-# 11) 协同网络径向图（原创）
+# 11) Radial co-expression network (innovative)
 VisGeneCoexpHive(obj, genes=paste0('G',1:12), threshold=0.2)
 
-# 12) 空间叠色（含非空间回退）
+# 12) Spatial overlay (with non-spatial fallback)
 VisSpatialOverlay(obj, features=c('G1','G2','G3'))
 
-# 13) Hex-binned 熵热图（原创，群体混合度）
+# 13) Hex-binned entropy heatmap (innovative; group mixing)
 VisHexEntropy(obj, group.by='seurat_clusters', bins=30)
 
-# 14) 局部Moran's I热点（原创，空间自相关）
+# 14) Local Moran's I hotspots (innovative; spatial autocorrelation)
 VisLocalMoran(obj, gene='G10', k=15)
 
-# 15) 群体质心流图（原创，MST指示潜在转移）
+# 15) Cluster centroid flow graph (innovative; MST transitions)
 VisClusterFlowGraph(obj, group.by='seurat_clusters')
 
-# 13) 启动Shiny（bs4Dash仪表盘）
-launchSeuratVisPro()  # 需已安装 bs4Dash
+# 13) Launch Shiny (bs4Dash dashboard)
+launchSeuratVisPro()  # requires bs4Dash installed
 ```
 
 ## Shiny
 
 ```r
-# 需要安装 bs4Dash
+# Install bs4Dash if needed
 install.packages('bs4Dash')
-launchSeuratVisPro() # 使用bs4Dash仪表盘布局
+launchSeuratVisPro() # uses bs4Dash dashboard layout
 ```
 
 ## pkgdown
 
-在具备Pandoc的环境中：
+With Pandoc available:
 
 ```r
-pkgdown::build_site() # 生成docs目录用于GitHub Pages
+pkgdown::build_site() # generates docs for GitHub Pages
 ```
-新函数的帮助文档由roxygen注释自动生成，构建站点后将出现在`docs/reference`。
+Help pages for new functions are generated from roxygen comments and will appear under `docs/reference` after building the site.
 
-## 依赖
+## Dependencies
 
 `Imports`: ggplot2, dplyr, tidyr, patchwork, shiny, DT, stats, methods, tibble, ggdendro, plotly, rlang, Seurat, scales, Matrix
 
-可选：bs4Dash（Shiny界面增强，未安装则自动回退）。
+Optional: bs4Dash (Shiny dashboard enhancements; will gracefully fallback if not installed).
