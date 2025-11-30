@@ -14,10 +14,12 @@
 #'
 #' @examples
 #' obj <- SeuratVisProExample()
+#'
 #' obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
 #'
 #' res <- VisBatchAlign(obj, batch = 'batch', reduction = 'pca', dims = 1:10, k = 20, palette = "C")
 #' res$plot
+#' head(res$summary)
 #'
 VisBatchAlign <- function(object,
                           batch,
@@ -61,6 +63,7 @@ VisBatchAlign <- function(object,
                       mix_prop = mix,
                       batch = batches)
 
+  # Plot
   p <- ggplot2::ggplot(df,
                        ggplot2::aes(
                          x = batch,

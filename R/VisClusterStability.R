@@ -14,8 +14,10 @@
 #'
 #' @examples
 #' obj <- SeuratVisProExample()
+#'
 #' res <- VisClusterStability(obj, resolution_range = seq(0.2,1.2,0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C")
 #' res$plot
+#' head(res$summary)
 #'
 VisClusterStability <- function(object,
                                 resolution_range = seq(0.2, 1.2, by = 0.2),
