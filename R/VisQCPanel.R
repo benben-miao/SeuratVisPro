@@ -18,9 +18,6 @@
 #' p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = FALSE, palette = "C")
 #' p
 #'
-#' p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = TRUE, palette = "C")
-#' p$v1
-#'
 VisQCPanel <- function(object,
                        genes_mt = "^MT-",
                        genes_ribo = NULL,

@@ -4,7 +4,7 @@
 \alias{svpp_theme}
 \title{Publication-ready ggplot theme}
 \usage{
-svpp_theme(grid = TRUE)
+svpp_theme()
 }
 \arguments{
 \item{grid}{Logical; if \code{FALSE}, removes panel grid.}

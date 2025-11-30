@@ -7,7 +7,7 @@
 SeuratVisProExample(
   n_cells = 300,
   n_genes = 1000,
-  n_clusters = 3,
+  n_clusters = 10,
   seed = 123,
   spatial = FALSE
 )

@@ -37,8 +37,9 @@ Visualize key QC metrics with customizable thresholds and optional interactivity
 }
 \examples{
 obj <- SeuratVisProExample()
-p <- VisQCPanel(obj, genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters")
+p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = FALSE, palette = "C")
 p
+
 }
 \author{
 benben-miao
