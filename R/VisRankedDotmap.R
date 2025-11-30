@@ -11,7 +11,7 @@
 #' VisRankedDotmap(obj, group.by = 'seurat_clusters', top_n = 5)
 #' @export
 VisRankedDotmap <- function(object, group.by = 'seurat_clusters', features = NULL, top_n = 8, palette = NULL) {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (!(group.by %in% colnames(object@meta.data))) stop('group.by not found')
   if (is.null(features)) {
     Seurat::Idents(object) <- object[[group.by]][, 1]

@@ -13,7 +13,7 @@
 #' res$plot
 #' @export
 VisCellCycle <- function(object, s.genes, g2m.genes, reduction = "umap", dims = 1:10) {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   object <- suppressMessages(Seurat::CellCycleScoring(object, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE))
   if (is.null(object@reductions[[reduction]])) {
     if (reduction == "pca") object <- suppressMessages(Seurat::RunPCA(object))

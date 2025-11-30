@@ -11,7 +11,7 @@
 #' p <- VisLocalMoran(obj, gene = 'G10', k = 15)
 #' p
 VisLocalMoran <- function(object, gene, reduction = 'umap', k = 15) {
-   svpp_check_seurat_object(object)
+   if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (is.null(object@reductions[[reduction]])) {
     if (reduction == 'pca') object <- suppressMessages(Seurat::RunPCA(object))
     if (reduction == 'umap') object <- suppressWarnings(suppressMessages(Seurat::RunUMAP(object, dims = 1:10)))
@@ -37,6 +37,6 @@ VisLocalMoran <- function(object, gene, reduction = 'umap', k = 15) {
    df <- as.data.frame(emb)
    colnames(df) <- c('X1','X2')
    df$I <- local_I[,1]
-   ggplot2::ggplot(df, ggplot2::aes(x = X1, y = X2, color = I)) + ggplot2::geom_point(size = 0.8) + ggplot2::scale_color_viridis_c() +
-     svpp_theme() + ggplot2::labs(x = paste0(toupper(reduction),'1'), y = paste0(toupper(reduction),'2'), color = "Local Moran's I")
+  ggplot2::ggplot(df, ggplot2::aes(x = X1, y = X2, color = I)) + ggplot2::geom_point(size = 0.8) + ggplot2::scale_color_viridis_c() +
+    svpp_theme() + ggplot2::labs(x = paste0(toupper(reduction),'1'), y = paste0(toupper(reduction),'2'), color = "Local Moran's I")
  }

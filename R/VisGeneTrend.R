@@ -14,7 +14,7 @@
 #' p
 #' @export
 VisGeneTrend <- function(object, features, by = "pseudotime", reduction = "umap", dims = 1:2, smooth.method = "loess", palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   assay <- Seurat::DefaultAssay(object)
   if (by == "pseudotime") {
     if (is.null(object@reductions[[reduction]])) {

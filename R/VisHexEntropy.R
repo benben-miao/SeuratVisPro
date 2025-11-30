@@ -11,7 +11,7 @@
 #' p <- VisHexEntropy(obj, group.by = 'seurat_clusters', bins = 30)
 #' p
 VisHexEntropy <- function(object, group.by = 'seurat_clusters', reduction = 'umap', bins = 30) {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (is.null(object@reductions[[reduction]])) {
     if (reduction == 'pca') object <- suppressMessages(Seurat::RunPCA(object))
     if (reduction == 'umap') object <- suppressWarnings(suppressMessages(Seurat::RunUMAP(object, dims = 1:10)))

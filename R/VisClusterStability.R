@@ -13,7 +13,7 @@
 #' res$plot
 #' @export
 VisClusterStability <- function(object, resolution_range = seq(0.2, 1.2, by = 0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (is.null(object@reductions$pca)) object <- Seurat::RunPCA(object)
   object <- Seurat::FindNeighbors(object, dims = dims)
   full_clusters <- lapply(resolution_range, function(r) {

@@ -13,7 +13,7 @@
 #' res$plot
 #' @export
 VisLigRec <- function(object, lr_table, group.by = "seurat_clusters", assay = NULL, palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (is.null(assay)) assay <- Seurat::DefaultAssay(object)
   if (!(group.by %in% colnames(object@meta.data))) stop("group.by not found in meta.data")
   groups <- object@meta.data[[group.by]]

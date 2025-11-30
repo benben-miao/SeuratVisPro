@@ -30,7 +30,7 @@ VisQCPanel(
 \item{palette}{Viridis palette option.}
 }
 \value{
-A \code{patchwork} assembled ggplot or a list of interactive plots.
+A assembled ggplot or a list of interactive plots.
 }
 \description{
 Visualize key QC metrics with customizable thresholds and optional interactivity.
@@ -39,4 +39,7 @@ Visualize key QC metrics with customizable thresholds and optional interactivity
 obj <- SeuratVisProExample()
 p <- VisQCPanel(obj, genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters")
 p
+}
+\author{
+benben-miao
 }

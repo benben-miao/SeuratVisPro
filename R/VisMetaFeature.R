@@ -14,7 +14,7 @@
 #' res$plot
 #' @export
 VisMetaFeature <- function(object, feature_sets, group.by = "seurat_clusters", nbin = 24, min.size = 3, palette = NULL) {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (!(group.by %in% colnames(object@meta.data))) stop("group.by not found in meta.data")
   # filter sets to genes present
   assay <- Seurat::DefaultAssay(object)

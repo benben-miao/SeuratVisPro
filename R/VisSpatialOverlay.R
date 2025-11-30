@@ -13,7 +13,7 @@
 #' VisSpatialOverlay(obj, features = c('G1','G2'))
 #' @export
 VisSpatialOverlay <- function(object, features, image = NULL, alpha = 0.8, coords_cols = c("x","y"), point_size = 0.8, palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (!is.null(object@images) && length(object@images) > 0) {
     plots <- lapply(features, function(f) {
       p <- Seurat::SpatialFeaturePlot(object, features = f, image = image) +
@@ -29,7 +29,7 @@ VisSpatialOverlay <- function(object, features, image = NULL, alpha = 0.8, coord
     df[[coords_cols[1]]] <- md[[coords_cols[1]]]
     df[[coords_cols[2]]] <- md[[coords_cols[2]]]
     plots <- lapply(features, function(f) {
-      ggplot2::ggplot(df, ggplot2::aes(x = rlang::.data[[coords_cols[1]]], y = rlang::.data[[coords_cols[2]]], color = rlang::.data[[f]])) +
+      ggplot2::ggplot(df, ggplot2::aes(x = !!rlang::sym(coords_cols[1]), y = !!rlang::sym(coords_cols[2]), color = !!rlang::sym(f))) +
         ggplot2::geom_point(alpha = alpha, size = point_size) + ggplot2::scale_color_viridis_c(option = palette) + svpp_theme() +
         ggplot2::labs(color = f, title = f)
     })

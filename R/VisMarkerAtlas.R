@@ -13,7 +13,7 @@
 #' res$plot
 #' @export
 VisMarkerAtlas <- function(object, top_n = 10, logfc.threshold = 0.25, min.pct = 0.1, test.use = "wilcox", palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   Seurat::Idents(object) <- object$seurat_clusters
   markers <- Seurat::FindAllMarkers(object, only.pos = TRUE, logfc.threshold = logfc.threshold, min.pct = min.pct, test.use = test.use)
   top_markers <- markers |> dplyr::group_by(cluster) |> dplyr::slice_head(n = top_n) |> dplyr::ungroup()

@@ -15,7 +15,7 @@
 #' VisGeneCoexpHive(obj, genes = paste0('G', 1:12), threshold = 0.2)
 #' @export
 VisGeneCoexpHive <- function(object, genes, reduction = 'pca', threshold = 0.2, low_color = 'steelblue', mid_color = 'grey80', high_color = 'firebrick') {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   assay <- Seurat::DefaultAssay(object)
   data <- Seurat::GetAssayData(object, assay = assay, slot = 'data')
   genes <- intersect(genes, rownames(data))

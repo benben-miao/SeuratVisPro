@@ -15,7 +15,7 @@
 #' p
 #' @export
 VisClusterTree <- function(object, group.by = "seurat_clusters", assay = NULL, dist.metric = "euclidean", linkage = "complete", label.size = 3, show_heatmap = TRUE) {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (is.null(assay)) assay <- Seurat::DefaultAssay(object)
   if (!(group.by %in% colnames(object@meta.data))) stop("group.by not found in meta.data")
   avg <- Seurat::AverageExpression(object, assays = assay, group.by = group.by)

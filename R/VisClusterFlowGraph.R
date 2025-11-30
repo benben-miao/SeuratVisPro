@@ -10,7 +10,7 @@
 #' p <- VisClusterFlowGraph(obj, group.by = 'seurat_clusters')
 #' p
 VisClusterFlowGraph <- function(object, group.by = 'seurat_clusters', reduction = 'umap') {
-   svpp_check_seurat_object(object)
+   if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
    if (!(group.by %in% colnames(object@meta.data))) stop('group.by not found')
   if (is.null(object@reductions[[reduction]])) {
     if (reduction == 'pca') object <- suppressMessages(Seurat::RunPCA(object))
@@ -45,9 +45,9 @@ VisClusterFlowGraph <- function(object, group.by = 'seurat_clusters', reduction 
    edges$y0 <- cents$y[edges$from]
    edges$x1 <- cents$x[edges$to]
    edges$y1 <- cents$y[edges$to]
-   ggplot2::ggplot() +
-     ggplot2::geom_segment(data = edges, ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1), arrow = ggplot2::arrow(length = ggplot2::unit(0.15, 'cm')), alpha = 0.7) +
-     ggplot2::geom_point(data = cents, ggplot2::aes(x = x, y = y), size = 3) +
-     ggplot2::geom_text(data = cents, ggplot2::aes(x = x, y = y, label = group), vjust = -0.8, size = 3) +
-     svpp_theme() + ggplot2::labs(x = paste0(toupper(reduction),'1'), y = paste0(toupper(reduction),'2'))
+  ggplot2::ggplot() +
+    ggplot2::geom_segment(data = edges, ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1), arrow = ggplot2::arrow(length = ggplot2::unit(0.15, 'cm')), alpha = 0.7) +
+    ggplot2::geom_point(data = cents, ggplot2::aes(x = x, y = y), size = 3) +
+    ggplot2::geom_text(data = cents, ggplot2::aes(x = x, y = y, label = group), vjust = -0.8, size = 3) +
+    svpp_theme() + ggplot2::labs(x = paste0(toupper(reduction),'1'), y = paste0(toupper(reduction),'2'))
  }

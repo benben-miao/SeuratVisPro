@@ -14,7 +14,7 @@
 #' res$plot
 #' @export
 VisBatchAlign <- function(object, batch, reduction = "pca", dims = 1:10, k = 20, palette = "C") {
-  svpp_check_seurat_object(object)
+  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
   if (!(batch %in% colnames(object@meta.data))) stop("batch column not found in meta.data")
   if (is.null(object@reductions[[reduction]])) {
     if (reduction == "pca") object <- suppressMessages(Seurat::RunPCA(object))

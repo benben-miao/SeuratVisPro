@@ -1,27 +1,3 @@
-#' @keywords internal
-svpp_check_seurat_object <- function(object) {
-  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
-  invisible(TRUE)
-}
-
-#' @keywords internal
-svpp_default_mt_pattern <- function() {
-  "^MT-"
-}
-
-#' @keywords internal
-svpp_compute_percent <- function(object, pattern, assay = NULL, name = "percent") {
-  svpp_check_seurat_object(object)
-  if (is.null(assay)) assay <- Seurat::DefaultAssay(object)
-  feats <- grep(pattern, rownames(object[[assay]]), value = TRUE)
-  if (length(feats) == 0) {
-    object[[name]] <- 0
-  } else {
-    object <- Seurat::PercentageFeatureSet(object, features = feats, col.name = name)
-  }
-  object
-}
-
 #' @title Example Seurat object for demonstrations
 #' @description Generate a small synthetic Seurat object suitable for examples and testing.
 #' @param n_cells Number of cells.
@@ -49,7 +25,13 @@ SeuratVisProExample <- function(n_cells = 300, n_genes = 1000, n_clusters = 3, s
   base_counts <- Matrix::Matrix(base_counts, sparse = TRUE)
   obj <- Seurat::CreateSeuratObject(base_counts)
   obj$cluster <- clusters
-  obj <- svpp_compute_percent(obj, svpp_default_mt_pattern(), name = "percent.mt")
+  assay <- Seurat::DefaultAssay(obj)
+  mt_feats <- grep("^MT-", rownames(obj[[assay]]), value = TRUE)
+  if (length(mt_feats) == 0) {
+    obj$percent.mt <- 0
+  } else {
+    obj <- Seurat::PercentageFeatureSet(obj, features = mt_feats, col.name = "percent.mt")
+  }
   obj <- suppressMessages(Seurat::NormalizeData(obj))
   obj <- suppressMessages(Seurat::FindVariableFeatures(obj))
   obj <- suppressMessages(Seurat::ScaleData(obj))
@@ -65,6 +47,10 @@ SeuratVisProExample <- function(n_cells = 300, n_genes = 1000, n_clusters = 3, s
   obj
 }
 
+#' @title Publication-ready ggplot theme
+#' @description Consistent theme used across SeuratVisPro plots with optional grid removal.
+#' @param grid Logical; if `FALSE`, removes panel grid.
+#' @return A `ggplot2` theme object.
 #' @keywords internal
 svpp_theme <- function(grid = TRUE) {
   fam <- "Arial"
