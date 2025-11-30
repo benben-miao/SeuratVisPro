@@ -9,13 +9,18 @@
 #' @param group.by Column in `object@meta.data` used for grouping.
 #' @param interactive If `TRUE`, returns interactive plots via `plotly::ggplotly`.
 #' @param assay Assay to use; defaults to `DefaultAssay(object)`.
-#'
 #' @param palette Viridis palette option.
+#'
+#' @export
+#'
 #' @examples
 #' obj <- SeuratVisProExample()
-#' p <- VisQCPanel(obj, genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters")
+#' p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = FALSE, palette = "C")
 #' p
-#' @export
+#'
+#' p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = TRUE, palette = "C")
+#' p$v1
+#'
 VisQCPanel <- function(object,
                        genes_mt = "^MT-",
                        genes_ribo = NULL,
@@ -23,14 +28,23 @@ VisQCPanel <- function(object,
                        interactive = FALSE,
                        assay = NULL,
                        palette = "C") {
-  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
-  if (is.null(assay)) assay <- Seurat::DefaultAssay(object)
+  # 1. Check object class
+  if (!inherits(object, "Seurat"))
+    stop("object must be a Seurat object")
+
+  # 2. DefaultAssay
+  if (is.null(assay))
+    assay <- Seurat::DefaultAssay(object)
+
+  # 3. PercentageFeatureSet for mitochondrial genes
   mt_feats <- grep(genes_mt, rownames(object[[assay]]), value = TRUE)
   if (length(mt_feats) == 0) {
     object$percent.mt <- 0
   } else {
     object <- Seurat::PercentageFeatureSet(object, features = mt_feats, col.name = "percent.mt")
   }
+
+  # 4. PercentageFeatureSet for ribosomal genes
   if (!is.null(genes_ribo)) {
     rb_feats <- grep(genes_ribo, rownames(object[[assay]]), value = TRUE)
     if (length(rb_feats) == 0) {
@@ -39,6 +53,8 @@ VisQCPanel <- function(object,
       object <- Seurat::PercentageFeatureSet(object, features = rb_feats, col.name = "percent.ribo")
     }
   }
+
+  # 5. Cells, Clusters, Genes in meta.data
   md <- object@meta.data
   if (is.null(group.by) ||
       !(group.by %in% colnames(md)))
@@ -48,41 +64,76 @@ VisQCPanel <- function(object,
     "seurat_clusters"
   else
     group.by
-  v1 <- ggplot2::ggplot(md,
-                        ggplot2::aes(
-                          x = !!rlang::sym(xlab),
-                          y = nFeature_RNA,
-                          fill = !!rlang::sym(xlab)
-                        )) +
-    ggplot2::geom_violin(scale = "width", color = NA) +
-    ggplot2::geom_boxplot(width = 0.1, outlier.shape = NA) +
-    ggplot2::labs(x = xlab, y = "nFeature_RNA") +
-    ggplot2::guides(fill = "none") + svpp_theme()
-  v2 <- ggplot2::ggplot(md,
-                        ggplot2::aes(
-                          x = !!rlang::sym(xlab),
-                          y = nCount_RNA,
-                          fill = !!rlang::sym(xlab)
-                        )) +
-    ggplot2::geom_violin(scale = "width", color = NA) +
-    ggplot2::geom_boxplot(width = 0.1, outlier.shape = NA) +
-    ggplot2::labs(x = xlab, y = "nCount_RNA") +
-    ggplot2::guides(fill = "none") + svpp_theme()
+
+
+  v1 <- ggplot2::ggplot(
+    md,
+    ggplot2::aes(
+      x = !!rlang::sym(xlab),
+      y = nFeature_RNA,
+      fill = !!rlang::sym(xlab),
+      color = !!rlang::sym(xlab)
+    )
+  ) +
+    ggplot2::geom_violin(
+      width = 0.8,
+      scale = "width",
+      color = NA,
+      alpha = 0.3,
+      show.legend = TRUE
+    ) +
+    ggplot2::geom_boxplot(
+      width = 0.3,
+      alpha = 0.5,
+      linewidth = 0.5,
+      show.legend = FALSE
+    ) +
+    ggplot2::labs(x = "Cell Cluster", y = "nFeature RNA") +
+    ggplot2::guides() +
+    svpp_theme()
+
+  v2 <- ggplot2::ggplot(
+    md,
+    ggplot2::aes(
+      x = !!rlang::sym(xlab),
+      y = nCount_RNA,
+      fill = !!rlang::sym(xlab),
+      color = !!rlang::sym(xlab)
+    )
+  ) +
+    ggplot2::geom_violin(
+      width = 0.8,
+      scale = "width",
+      color = NA,
+      alpha = 0.3,
+      show.legend = TRUE
+    ) +
+    ggplot2::geom_boxplot(
+      width = 0.3,
+      alpha = 0.5,
+      linewidth = 0.5,
+      show.legend = FALSE
+    ) +
+    ggplot2::labs(x = "Cell Cluster", y = "nCount RNA") +
+    ggplot2::guides() +
+    svpp_theme()
+
   v3 <- ggplot2::ggplot(md,
                         ggplot2::aes(x = nCount_RNA, y = nFeature_RNA, color = percent.mt)) +
-    ggplot2::geom_point(alpha = 0.6, size = 0.8) +
+    ggplot2::geom_point(alpha = 0.5, size = 1) +
     ggplot2::scale_color_viridis_c(option = palette) +
-    svpp_theme() +
-    ggplot2::labs(x = "nCount_RNA", y = "nFeature_RNA", color = "%MT")
+    ggplot2::labs(x = "nCount RNA", y = "nFeature RNA", color = "MT Percent") +
+    svpp_theme()
+
   if ("percent.ribo" %in% colnames(md)) {
     v4 <- ggplot2::ggplot(md, ggplot2::aes(x = percent.mt, y = percent.ribo)) +
       ggplot2::geom_bin2d(bins = 30) +
-      svpp_theme() +
-      ggplot2::labs(x = "%MT", y = "%Ribo")
+      ggplot2::labs(x = "%MT", y = "%Ribo") +
+      svpp_theme()
   } else {
     v4 <- ggplot2::ggplot() +
-      ggplot2::theme_void() +
-      ggplot2::labs(title = "Ribosomal genes not provided")
+      ggplot2::labs(title = "Ribosomal genes not provided") +
+      svpp_theme()
   }
   patch <- patchwork::wrap_plots(v1, v2, v3, v4, ncol = 2)
   if (interactive) {

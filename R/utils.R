@@ -10,7 +10,11 @@
 #' obj <- SeuratVisProExample(n_cells = 400, n_genes = 1000, n_clusters = 4)
 #' Seurat::DimPlot(obj, group.by = "cluster")
 #' @export
-SeuratVisProExample <- function(n_cells = 300, n_genes = 1000, n_clusters = 3, seed = 123, spatial = FALSE) {
+SeuratVisProExample <- function(n_cells = 300,
+                                n_genes = 1000,
+                                n_clusters = 10,
+                                seed = 123,
+                                spatial = FALSE) {
   set.seed(seed)
   clusters <- sample(paste0("C", seq_len(n_clusters)), n_cells, replace = TRUE)
   base_counts <- matrix(stats::rpois(n_cells * n_genes, lambda = 1), n_genes, n_cells)
@@ -19,7 +23,9 @@ SeuratVisProExample <- function(n_cells = 300, n_genes = 1000, n_clusters = 3, s
   for (k in seq_len(n_clusters)) {
     idx <- which(clusters == paste0("C", k))
     gene_shift <- ((k - 1) * floor(n_genes / n_clusters) + 1):min(n_genes, k * floor(n_genes / n_clusters))
-    base_counts[gene_shift, idx] <- base_counts[gene_shift, idx] + matrix(stats::rpois(length(gene_shift) * length(idx), lambda = 2), length(gene_shift), length(idx))
+    base_counts[gene_shift, idx] <- base_counts[gene_shift, idx] + matrix(stats::rpois(length(gene_shift) * length(idx), lambda = 2),
+                                                                          length(gene_shift),
+                                                                          length(idx))
   }
   # convert to sparse to avoid coercion warning
   base_counts <- Matrix::Matrix(base_counts, sparse = TRUE)
@@ -52,16 +58,22 @@ SeuratVisProExample <- function(n_cells = 300, n_genes = 1000, n_clusters = 3, s
 #' @param grid Logical; if `FALSE`, removes panel grid.
 #' @return A `ggplot2` theme object.
 #' @keywords internal
-svpp_theme <- function(grid = TRUE) {
-  fam <- "Arial"
-  psfonts <- names(grDevices::postscriptFonts())
-  if (!is.null(psfonts) && !(fam %in% psfonts)) fam <- "sans"
-  if (!interactive()) fam <- "sans"
-  th <- ggplot2::theme_bw(base_size = 12, base_family = fam)
-  if (!grid) th <- th + ggplot2::theme(panel.grid = ggplot2::element_blank())
-  th + ggplot2::theme(
-    plot.title = ggplot2::element_text(face = "bold"),
-    axis.title = ggplot2::element_text(face = "bold"),
-    legend.title = ggplot2::element_text(face = "bold")
-  )
+svpp_theme <- function() {
+  ggplot2::theme_light() +
+    ggplot2::theme(
+      text = ggplot2::element_text(family = "Arial"),
+      panel.border = ggplot2::element_rect(color = "black", size = 0.5),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_line(color = "black", size = 0.5),
+      axis.text = ggplot2::element_text(size = 8, color = "black"),
+      axis.title = ggplot2::element_text(
+        size = 10,
+        face = "bold",
+        color = "black"
+      ),
+      legend.title = ggplot2::element_text(size = 8, color = "black"),
+      legend.text = ggplot2::element_text(size = 8, color = "black"),
+      legend.key.size = ggplot2::unit(0.5, 'cm')
+    )
 }
