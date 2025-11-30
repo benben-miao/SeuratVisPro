@@ -25,51 +25,60 @@ VisQCPanel <- function(object,
                        interactive = FALSE,
                        assay = NULL,
                        palette = "C") {
-  # 1. Check object class
+  # Check object class
   if (!inherits(object, "Seurat"))
     stop("object must be a Seurat object")
 
-  # 2. DefaultAssay
+  # DefaultAssay
   if (is.null(assay))
     assay <- Seurat::DefaultAssay(object)
 
-  # 3. PercentageFeatureSet for mitochondrial genes
-  mt_feats <- grep(genes_mt, rownames(object[[assay]]), value = TRUE)
+  # Genes in assay
+  assay_obj <- Seurat::GetAssay(object, assay = assay)
+  genes <- rownames(assay_obj)
+
+  # PercentageFeatureSet for mitochondrial genes
+  mt_feats <- grep(genes_mt, genes, value = TRUE)
   if (length(mt_feats) == 0) {
-    object$percent.mt <- 0
+    n_cells <- ncol(object)
+    object$percent.mt <- rep(0, n_cells)
   } else {
     object <- Seurat::PercentageFeatureSet(object, features = mt_feats, col.name = "percent.mt")
   }
 
-  # 4. PercentageFeatureSet for ribosomal genes
+  # PercentageFeatureSet for ribosomal genes
   if (!is.null(genes_ribo)) {
-    rb_feats <- grep(genes_ribo, rownames(object[[assay]]), value = TRUE)
+    rb_feats <- grep(genes_ribo, genes, value = TRUE)
     if (length(rb_feats) == 0) {
-      object$percent.ribo <- 0
+      n_cells <- ncol(object)
+      object$percent.ribo <- rep(0, n_cells)
     } else {
       object <- Seurat::PercentageFeatureSet(object, features = rb_feats, col.name = "percent.ribo")
     }
   }
 
-  # 5. Cells, Clusters, Genes in meta.data
+  # Group in meta.data
   md <- object@meta.data
-  if (is.null(group.by) ||
-      !(group.by %in% colnames(md)))
-    group.by <- NULL
+  if (!is.null(group.by) && group.by %in% colnames(md)) {
+    md$.group <- md[[group.by]]
+    group_col <- ".group"
+  } else if (!is.null(Seurat::Idents(object))) {
+    md$.group <- as.character(Seurat::Idents(object))
+    group_col <- ".group"
+  } else {
+    md$.group <- factor("all")
+    group_col <- ".group"
+  }
+  xlab <- ifelse(is.null(group.by), "group", group.by)
 
-  xlab <- if (is.null(group.by))
-    "seurat_clusters"
-  else
-    group.by
-
-
+  # Plot
   v1 <- ggplot2::ggplot(
     md,
     ggplot2::aes(
-      x = !!rlang::sym(xlab),
+      x = !!rlang::sym(group_col),
       y = nFeature_RNA,
-      fill = !!rlang::sym(xlab),
-      color = !!rlang::sym(xlab)
+      fill = !!rlang::sym(group_col),
+      color = !!rlang::sym(group_col)
     )
   ) +
     ggplot2::geom_violin(
@@ -92,10 +101,10 @@ VisQCPanel <- function(object,
   v2 <- ggplot2::ggplot(
     md,
     ggplot2::aes(
-      x = !!rlang::sym(xlab),
+      x = !!rlang::sym(group_col),
       y = nCount_RNA,
-      fill = !!rlang::sym(xlab),
-      color = !!rlang::sym(xlab)
+      fill = !!rlang::sym(group_col),
+      color = !!rlang::sym(group_col)
     )
   ) +
     ggplot2::geom_violin(
@@ -133,15 +142,22 @@ VisQCPanel <- function(object,
       svpp_theme()
   }
   patch <- patchwork::wrap_plots(v1, v2, v3, v4, ncol = 2)
+
+  # Plotly
   if (interactive) {
-    return(
-      list(
-        v1 = plotly::ggplotly(v1),
-        v2 = plotly::ggplotly(v2),
-        v3 = plotly::ggplotly(v3),
-        v4 = plotly::ggplotly(v4)
-      )
-    )
+    p1 <- plotly::ggplotly(v1)
+    p2 <- plotly::ggplotly(v2)
+    p3 <- plotly::ggplotly(v3)
+    p4 <- plotly::ggplotly(v4)
+    return(plotly::subplot(
+      p1,
+      p2,
+      p3,
+      p4,
+      nrows = 2,
+      shareX = FALSE,
+      shareY = FALSE
+    ))
   }
   patch
 }
