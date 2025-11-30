@@ -1,25 +1,46 @@
 #' @title Cluster stability across resolutions
 #' @description Assess clustering stability by resampling cells and varying resolution.
+#' @author benben-miao
+#'
+#' @return A list with `summary` data.frame and a ggplot summarizing stability.
 #' @param object A `Seurat` object with PCA computed.
 #' @param resolution_range Numeric vector of resolutions, e.g., `seq(0.2, 1.2, by=0.2)`.
 #' @param dims PCA dimensions to use.
 #' @param reps Number of resampling repetitions.
 #' @param prop Proportion of cells to sample per repetition.
 #' @param palette Viridis palette option.
-#' @return A list with `summary` data.frame and a ggplot summarizing stability.
+#'
+#' @export
+#'
 #' @examples
 #' obj <- SeuratVisProExample()
-#' res <- VisClusterStability(obj, resolution_range = seq(0.2,1,0.2))
+#' res <- VisClusterStability(obj, resolution_range = seq(0.2,1.2,0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C")
 #' res$plot
-#' @export
-VisClusterStability <- function(object, resolution_range = seq(0.2, 1.2, by = 0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C") {
-  if (!inherits(object, "Seurat")) stop("object must be a Seurat object")
-  if (is.null(object@reductions$pca)) object <- Seurat::RunPCA(object)
+#'
+VisClusterStability <- function(object,
+                                resolution_range = seq(0.2, 1.2, by = 0.2),
+                                dims = 1:10,
+                                reps = 5,
+                                prop = 0.8,
+                                palette = "C") {
+  # Seurat object check
+  if (!inherits(object, "Seurat"))
+    stop("object must be a Seurat object")
+
+  # PCA in object@reductions$pca
+  if (is.null(object@reductions$pca))
+    object <- Seurat::RunPCA(object)
+
+  # FindNeighbors
   object <- Seurat::FindNeighbors(object, dims = dims)
+
+  # FindClusters
   full_clusters <- lapply(resolution_range, function(r) {
     as.character(Seurat::FindClusters(object, resolution = r)$seurat_clusters)
   })
   names(full_clusters) <- paste0("res_", resolution_range)
+
+  # Stability
   stability <- dplyr::tibble(resolution = numeric(), agreement = numeric())
   cells <- colnames(object)
   for (r in resolution_range) {
@@ -41,7 +62,17 @@ VisClusterStability <- function(object, resolution_range = seq(0.2, 1.2, by = 0.
     }
     stability <- dplyr::bind_rows(stability, dplyr::tibble(resolution = r, agreement = mean(agree_vec)))
   }
-  p <- ggplot2::ggplot(stability, ggplot2::aes(x = resolution, y = agreement)) + ggplot2::geom_line(color = "grey30") + ggplot2::geom_point(ggplot2::aes(color = agreement)) +
-    ggplot2::scale_color_viridis_c(option = palette) + ggplot2::scale_y_continuous(limits = c(0, 1)) + svpp_theme() + ggplot2::labs(y = "Agreement (resampled)")
+
+  p <- ggplot2::ggplot(stability,
+                       ggplot2::aes(
+                         x = factor(resolution),
+                         y = agreement,
+                         fill = agreement
+                       )) +
+    ggplot2::geom_col(width = 0.5) +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::labs(x = "Resolution", y = "Agreement (resampled)", fill = "Agreement") +
+    svpp_theme()
   list(summary = stability, plot = p)
 }
