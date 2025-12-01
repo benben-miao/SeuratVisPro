@@ -8,6 +8,7 @@
 #' @param reduction Dimensional reduction to use for kNN (e.g., 'pca' or 'umap').
 #' @param dims Dimensions to use.
 #' @param k Number of neighbors.
+#'
 #' @param palette Viridis palette option.
 #' @param violin_width Violin width.
 #' @param violin_alpha Violin alpha.
@@ -118,6 +119,8 @@ VisBatchAlign <- function(object,
     ggplot2::guides() +
     ggplot2::labs(x = "Batch", y = "Neighbor batch difference proportion") +
     ggplot2::lims(y = c(0, 1.0)) +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
   list(summary = df, plot = p)
 }

@@ -7,6 +7,7 @@
 #' @param lr_table Data frame with columns `ligand` and `receptor`.
 #' @param group.by Metadata column for groups (e.g., clusters).
 #' @param assay Assay name.
+#'
 #' @param palette Viridis palette option.
 #' @param tile_alpha Tile alpha.
 #'
@@ -30,16 +31,19 @@
 #'
 #' res <- VisLigRec(
 #'   obj,
+#'   assay = NULL,
 #'   lr_table = lr,
-#'   group.by = "seurat_clusters")
+#'   group.by = "seurat_clusters",
+#'   palette = "C",
+#'   tile_alpha = 0.8)
 #'
 #' res$plot
 #' head(res$scores)
 #'
 VisLigRec <- function(object,
+                      assay = NULL,
                       lr_table,
                       group.by = "seurat_clusters",
-                      assay = NULL,
                       palette = "C",
                       tile_alpha = 0.8) {
   # Seurat object check
@@ -87,8 +91,9 @@ VisLigRec <- function(object,
       inherit.aes = TRUE,
       alpha = tile_alpha
     ) +
-    ggplot2::scale_fill_viridis_c(option = palette) +
     ggplot2::labs(x = "Source group (ligand)", y = "Target group (receptor)", fill = "LR score") +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
   list(scores = res, plot = p)
 }

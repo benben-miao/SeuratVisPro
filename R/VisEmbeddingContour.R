@@ -7,6 +7,7 @@
 #' @param group.by Metadata column for grouping.
 #' @param reduction Reduction name, default 'umap'.
 #' @param levels Number of contour levels.
+#'
 #' @param palette Optional manual palette for groups.
 #' @param point_size Point size.
 #' @param point_alpha Point alpha.
@@ -31,7 +32,7 @@
 #'   group.by = "seurat_clusters",
 #'   reduction = "umap",
 #'   levels = 5,
-#'   palette = NULL,
+#'   palette = "C",
 #'   point_size = 1,
 #'   point_alpha = 0.5,
 #'   contour_alpha = 0.1)
@@ -41,7 +42,7 @@ VisEmbeddingContour <- function(object,
                                 group.by = "seurat_clusters",
                                 reduction = "umap",
                                 levels = 5,
-                                palette = NULL,
+                                palette = "C",
                                 point_size = 1,
                                 point_alpha = 0.5,
                                 contour_alpha = 0.1) {
@@ -75,9 +76,8 @@ VisEmbeddingContour <- function(object,
     ) +
     ggplot2::guides(fill = 'none') +
     ggplot2::labs(x = paste0(toupper(reduction), '1'), y = paste0(toupper(reduction), '2')) +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
-
-  if (!is.null(palette))
-    p <- p + ggplot2::scale_color_manual(values = palette)
   p
 }

@@ -33,7 +33,7 @@
 #'   obj,
 #'   assay = NULL,
 #'   genes_mt = "^MT-",
-#'   genes_ribo = NULL,
+#'   genes_ribo = "^RPL|^RPS",
 #'   group.by = "seurat_clusters",
 #'   interactive = FALSE,
 #'   palette = "C",
@@ -46,7 +46,7 @@
 VisQCPanel <- function(object,
                        assay = NULL,
                        genes_mt = "^MT-",
-                       genes_ribo = NULL,
+                       genes_ribo = "^RPL|^RPS",
                        group.by = NULL,
                        interactive = FALSE,
                        palette = "C",
@@ -125,6 +125,8 @@ VisQCPanel <- function(object,
     ) +
     ggplot2::labs(x = "Cell Cluster", y = "nFeature RNA") +
     ggplot2::guides() +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
 
   v2 <- ggplot2::ggplot(
@@ -151,6 +153,8 @@ VisQCPanel <- function(object,
     ) +
     ggplot2::labs(x = "Cell Cluster", y = "nCount RNA") +
     ggplot2::guides() +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
 
   v3 <- ggplot2::ggplot(md,
@@ -164,10 +168,12 @@ VisQCPanel <- function(object,
     v4 <- ggplot2::ggplot(md, ggplot2::aes(x = percent.mt, y = percent.ribo)) +
       ggplot2::geom_bin2d(bins = 30) +
       ggplot2::labs(x = "%MT", y = "%Ribo") +
+      ggplot2::scale_fill_viridis_c(option = palette) +
       svpp_theme()
   } else {
     v4 <- ggplot2::ggplot() +
       ggplot2::labs(title = "Ribosomal genes not provided") +
+      ggplot2::scale_fill_viridis_c(option = palette) +
       svpp_theme()
   }
   patch <- patchwork::wrap_plots(v1, v2, v3, v4, ncol = 2)

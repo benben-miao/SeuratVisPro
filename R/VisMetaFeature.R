@@ -8,6 +8,7 @@
 #' @param group.by Metadata column for grouping.
 #' @param nbin Number of bins for `AddModuleScore`.
 #' @param min.size Minimum gene set size to keep.
+#'
 #' @param palette Optional fill palette.
 #' @param violin_width Violin width.
 #' @param violin_alpha Violin alpha.
@@ -38,7 +39,7 @@
 #'   group.by = "seurat_clusters",
 #'   nbin = 24,
 #'   min.size = 3,
-#'   palette = NULL,
+#'   palette = "C",
 #'   violin_width = 0.8,
 #'   violin_alpha = 0.3,
 #'   box_width = 0.3,
@@ -51,7 +52,7 @@ VisMetaFeature <- function(object,
                            group.by = "seurat_clusters",
                            nbin = 24,
                            min.size = 3,
-                           palette = NULL,
+                           palette = "C",
                            violin_width = 0.8,
                            violin_alpha = 0.3,
                            box_width = 0.3,
@@ -140,8 +141,9 @@ VisMetaFeature <- function(object,
     ggplot2::facet_wrap(~ set, scales = "free_y") +
     ggplot2::guides() +
     ggplot2::labs(x = "Group", y = "Score") +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
-  if (!is.null(palette))
-    p <- p + ggplot2::scale_fill_manual(values = palette)
+
   list(object = object, plot = p)
 }

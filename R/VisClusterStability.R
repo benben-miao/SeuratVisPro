@@ -8,6 +8,7 @@
 #' @param dims PCA dimensions to use.
 #' @param reps Number of resampling repetitions.
 #' @param prop Proportion of cells to sample per repetition.
+#'
 #' @param palette Viridis palette option.
 #'
 #' @export
@@ -91,6 +92,9 @@ VisClusterStability <- function(object,
     ggplot2::scale_color_viridis_c(option = palette) +
     ggplot2::scale_y_continuous(limits = c(0, 1)) +
     ggplot2::labs(x = "Resolution", y = "Agreement (resampled)", fill = "Agreement") +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
+
   list(summary = stability, plot = p)
 }

@@ -8,6 +8,7 @@
 #' @param logfc_threshold Log fold-change threshold for marker finding.
 #' @param min_percent Minimum percent expressed.
 #' @param test_method Differential test (e.g., 'wilcox').
+#'
 #' @param palette Viridis palette option.
 #'
 #' @export
@@ -79,8 +80,9 @@ VisMarkerAtlas <- function(object,
   # Plot
   p <- ggplot2::ggplot(df, ggplot2::aes(x = cluster, y = gene, fill = avg_exp)) +
     ggplot2::geom_tile() +
-    ggplot2::scale_fill_viridis_c(option = palette) +
     ggplot2::labs(x = "Cluster", y = "Marker genes", fill = "AvgExpr") +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
 
   list(markers = top_markers, plot = p)

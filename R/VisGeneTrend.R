@@ -9,8 +9,10 @@
 #' @param reduction Reduction to use for pseudotime ('umap' or 'pca').
 #' @param dims Dimensions used for pseudotime ranking.
 #' @param smooth.method Smoothing method ('loess' or 'gam').
+#'
 #' @param palette Viridis palette option.
 #' @param point_size Point size.
+#' @param point_alpha Point alpha.
 #' @param smooth_alpha Smooth alpha.
 #' @param smooth_linewidth Smooth line width.
 #'
@@ -37,6 +39,7 @@
 #'   smooth.method = "loess",
 #'   palette = "C",
 #'   point_size = 2,
+#'   point_alpha = 0.3,
 #'   smooth_alpha = 0.3,
 #'   smooth_linewidth = 1.5)
 #' p
@@ -49,6 +52,7 @@ VisGeneTrend <- function(object,
                          smooth.method = "loess",
                          palette = "C",
                          point_size = 2,
+                         point_alpha = 0.3,
                          smooth_alpha = 0.3,
                          smooth_linewidth = 1.5) {
   # Seurat object check
@@ -92,7 +96,7 @@ VisGeneTrend <- function(object,
       fill = gene,
       color = gene
     )) +
-      ggplot2::geom_point(alpha = 0.5, size = point_size) +
+      ggplot2::geom_point(alpha = point_alpha, size = point_size) +
       ggplot2::geom_smooth(
         method = "loess",
         alpha = smooth_alpha,
@@ -103,6 +107,8 @@ VisGeneTrend <- function(object,
         "Pseudotime"
         else
           by, y = "Expression") +
+      ggplot2::scale_color_viridis_d(option = palette) +
+      ggplot2::scale_fill_viridis_d(option = palette) +
       svpp_theme()
   } else {
     p <- ggplot2::ggplot(df, ggplot2::aes(
@@ -111,7 +117,7 @@ VisGeneTrend <- function(object,
       fill = gene,
       color = gene
     )) +
-      ggplot2::geom_point(alpha = 0.5, size = point_size) +
+      ggplot2::geom_point(alpha = point_alpha, size = point_size) +
       ggplot2::geom_smooth(
         method = "gam",
         alpha = smooth_alpha,
@@ -122,6 +128,8 @@ VisGeneTrend <- function(object,
         "Pseudotime"
         else
           by, y = "Expression") +
+      ggplot2::scale_color_viridis_d(option = palette) +
+      ggplot2::scale_fill_viridis_d(option = palette) +
       svpp_theme()
   }
   p

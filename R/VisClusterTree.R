@@ -9,6 +9,8 @@
 #' @param dist.metric Distance metric: 'euclidean' or 'correlation'.
 #' @param linkage Linkage method, e.g., 'complete','average','ward.D2'.
 #' @param show_heatmap If TRUE, append a pairwise similarity heatmap under the tree.
+#'
+#' @param palette Palette.
 #' @param tile_alpha Tile alpha.
 #'
 #' @export
@@ -32,6 +34,7 @@
 #'   dist.metric = "euclidean",
 #'   linkage = "complete",
 #'   show_heatmap = TRUE,
+#'   palette = "C",
 #'   tile_alpha = 0.8)
 #' p
 #'
@@ -41,6 +44,7 @@ VisClusterTree <- function(object,
                            dist.metric = "euclidean",
                            linkage = "complete",
                            show_heatmap = TRUE,
+                           palette = "C",
                            tile_alpha = 0.8) {
   # Seurat object check
   if (!inherits(object, "Seurat"))
@@ -87,6 +91,8 @@ VisClusterTree <- function(object,
     ggplot2::labs(x = "Clusters", y = "Height") +
     ggplot2::scale_x_continuous(breaks = dd$labels$x,
                                 labels = dd$labels$label) +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
 
   if (!show_heatmap)
@@ -108,8 +114,10 @@ VisClusterTree <- function(object,
 
   p_heat <- ggplot2::ggplot(sim_df, ggplot2::aes(x = cluster1, y = cluster2, fill = sim)) +
     ggplot2::geom_tile(alpha = tile_alpha) +
-    ggplot2::scale_fill_viridis_c() +
     ggplot2::labs(x = NULL, y = NULL, fill = "Similarity") +
+    ggplot2::scale_color_viridis_c(option = palette) +
+    ggplot2::scale_fill_viridis_c(option = palette) +
     svpp_theme()
+
   patchwork::wrap_plots(p_tree, p_heat, ncol = 2)
 }

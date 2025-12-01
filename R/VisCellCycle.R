@@ -8,6 +8,8 @@
 #' @param genes_g2m Character vector for G2/M phase genes.
 #' @param reduction Reduction name for overlay.
 #' @param dims Dimensions for neighbor graph.
+#'
+#' @param palette Palette.
 #' @param alpha Points and bars alpha.
 #'
 #' @export
@@ -32,6 +34,7 @@
 #'   genes_g2m,
 #'   reduction = "umap",
 #'   dims = 1:10,
+#'   palette = "C",
 #'   alpha = 0.8)
 #'
 #' res$plot
@@ -43,6 +46,7 @@ VisCellCycle <- function(object,
                          genes_g2m,
                          reduction = "umap",
                          dims = 1:10,
+                         palette = "C",
                          alpha = 0.8) {
   # Seurat object chek
   if (!inherits(object, "Seurat"))
@@ -71,9 +75,14 @@ VisCellCycle <- function(object,
                         reduction = reduction,
                         group.by = "Phase",
                         alpha = alpha) +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
+
   p2 <- ggplot2::ggplot(object@meta.data, ggplot2::aes(x = Phase, fill = Phase)) +
     ggplot2::geom_bar(width = 0.5, alpha = alpha) +
+    ggplot2::scale_color_viridis_d(option = palette) +
+    ggplot2::scale_fill_viridis_d(option = palette) +
     svpp_theme()
 
   list(

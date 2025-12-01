@@ -6,6 +6,8 @@
 #' @param object A `Seurat` object.
 #' @param group.by Metadata column for cluster identity.
 #' @param reduction Reduction name, default 'umap'.
+#'
+#' @param palette Palette.
 #' @param point_size Point size.
 #' @param point_alpha Point alpha.
 #' @param label_size Label size.
@@ -28,6 +30,7 @@
 #'    obj,
 #'    group.by = "seurat_clusters",
 #'    reduction = "umap",
+#'    palette = "C",
 #'    point_size = 7,
 #'    point_alpha = 0.9,
 #'    label_size = 5)
@@ -36,6 +39,7 @@
 VisClusterFlowGraph <- function(object,
                                 group.by = "seurat_clusters",
                                 reduction = "umap",
+                                palette = "C",
                                 point_size = 7,
                                 point_alpha = 0.9,
                                 label_size = 7) {
@@ -134,5 +138,7 @@ VisClusterFlowGraph <- function(object,
          size = label_size
       ) +
       ggplot2::labs(x = paste0(toupper(reduction), '1'), y = paste0(toupper(reduction), '2')) +
+      ggplot2::scale_color_viridis_d(option = palette) +
+      ggplot2::scale_fill_viridis_d(option = palette) +
       svpp_theme()
 }
