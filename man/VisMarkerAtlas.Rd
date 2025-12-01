@@ -6,23 +6,23 @@
 \usage{
 VisMarkerAtlas(
   object,
-  top_n = 5,
-  logfc.threshold = 0.25,
-  min.pct = 0.1,
-  test.use = "wilcox",
+  markers_top = 5,
+  logfc_threshold = 0.25,
+  min_percent = 0.1,
+  test_method = "wilcox",
   palette = "C"
 )
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
 
-\item{top_n}{Number of top markers per cluster.}
+\item{markers_top}{Number of top markers per cluster.}
 
-\item{logfc.threshold}{Log fold-change threshold for marker finding.}
+\item{logfc_threshold}{Log fold-change threshold for marker finding.}
 
-\item{min.pct}{Minimum percent expressed.}
+\item{min_percent}{Minimum percent expressed.}
 
-\item{test.use}{Differential test (e.g., 'wilcox').}
+\item{test_method}{Differential test (e.g., 'wilcox').}
 
 \item{palette}{Viridis palette option.}
 }
@@ -33,9 +33,25 @@ A list containing marker table and ggplot heatmap.
 Find top markers per cluster and visualize as a heatmap.
 }
 \examples{
-obj <- SeuratVisProExample()
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
 
-res <- VisMarkerAtlas(obj, top_n = 5, logfc.threshold = 0.25, min.pct = 0.1, test.use = "wilcox", palette = "C")
+res <- VisMarkerAtlas(
+  obj,
+  markers_top = 5,
+  logfc_threshold = 0.25,
+  min_percent = 0.1,
+  test_method = "wilcox",
+  palette = "C")
+
 res$plot
 head(res$markers)
 

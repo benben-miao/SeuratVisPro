@@ -10,7 +10,11 @@ VisBatchAlign(
   reduction = "pca",
   dims = 1:10,
   k = 20,
-  palette = "C"
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
 )
 }
 \arguments{
@@ -25,6 +29,14 @@ VisBatchAlign(
 \item{k}{Number of neighbors.}
 
 \item{palette}{Viridis palette option.}
+
+\item{violin_width}{Violin width.}
+
+\item{violin_alpha}{Violin alpha.}
+
+\item{box_width}{Box width.}
+
+\item{box_alpha}{Box alpha.}
 }
 \value{
 A list with summary data and plot comparing neighbor batch composition.
@@ -33,11 +45,34 @@ A list with summary data and plot comparing neighbor batch composition.
 Quantify and visualize batch mixing in a KNN graph before/after integration.
 }
 \examples{
-obj <- SeuratVisProExample()
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
 
-obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
+obj$batch <- sample(
+  c('A','B'),
+  ncol(obj),
+  replace = TRUE)
 
-res <- VisBatchAlign(obj, batch = 'batch', reduction = 'pca', dims = 1:10, k = 20, palette = "C")
+res <- VisBatchAlign(
+  obj,
+  batch = 'batch',
+  reduction = 'pca',
+  dims = 1:10,
+  k = 20,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5)
+
 res$plot
 head(res$summary)
 

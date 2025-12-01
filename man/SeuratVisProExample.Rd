@@ -21,14 +21,22 @@ SeuratVisProExample(
 
 \item{n_genes}{Number of genes.}
 
-\item{n_clusters}{Number of simulated clusters.}
+\item{n_clusters}{Number of clusters.}
 
 \item{seed}{Random seed for reproducibility.}
+
+\item{genes_mt}{Mitochondrial genes characters.}
+
+\item{neighbor_dims}{Neighbor dims.}
+
+\item{cluster_res}{Cluster resolution.}
+
+\item{umap_dims}{UMAP dims.}
 
 \item{spatial}{If TRUE, adds synthetic spatial coordinates 'x','y' to meta.data.}
 }
 \value{
-A \code{Seurat} object with basic preprocessing (DefaultAssay, PercentageFeatureSet, NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunUMAP).
+A \code{Seurat} object with basic preprocessing.
 }
 \description{
 Generate a \code{Seurat} object with basic preprocessing (DefaultAssay, PercentageFeatureSet, NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunUMAP).
@@ -39,6 +47,10 @@ obj <- SeuratVisProExample(
     n_genes = 1000,
     n_clusters = 10,
     seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
     spatial = FALSE)
 
 Seurat::DimPlot(obj, group.by = "cluster")

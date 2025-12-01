@@ -6,28 +6,31 @@
 \usage{
 VisClusterTree(
   object,
-  group.by = "seurat_clusters",
   assay = NULL,
+  group.by = "seurat_clusters",
   dist.metric = "euclidean",
   linkage = "complete",
-  label.size = 3,
-  show_heatmap = TRUE
+  show_heatmap = TRUE,
+  palette = "C",
+  tile_alpha = 0.8
 )
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
 
-\item{group.by}{Metadata column for cluster identity.}
-
 \item{assay}{Assay name.}
+
+\item{group.by}{Metadata column for cluster identity.}
 
 \item{dist.metric}{Distance metric: 'euclidean' or 'correlation'.}
 
 \item{linkage}{Linkage method, e.g., 'complete','average','ward.D2'.}
 
-\item{label.size}{Label size for cluster names.}
-
 \item{show_heatmap}{If TRUE, append a pairwise similarity heatmap under the tree.}
+
+\item{palette}{Palette.}
+
+\item{tile_alpha}{Tile alpha.}
 }
 \value{
 A ggplot dendrogram (or patchwork with heatmap).
@@ -36,7 +39,29 @@ A ggplot dendrogram (or patchwork with heatmap).
 Build a hierarchical tree of clusters using average expression profiles.
 }
 \examples{
-obj <- SeuratVisProExample()
-p <- VisClusterTree(obj, group.by = 'seurat_clusters')
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisClusterTree(
+  obj,
+  assay = NULL,
+  group.by = "seurat_clusters",
+  dist.metric = "euclidean",
+  linkage = "complete",
+  show_heatmap = TRUE,
+  palette = "C",
+  tile_alpha = 0.8)
 p
+
+}
+\author{
+benben-miao
 }

@@ -4,18 +4,30 @@
 \alias{VisCellCycle}
 \title{Cell cycle visualization}
 \usage{
-VisCellCycle(object, s.genes, g2m.genes, reduction = "umap", dims = 1:10)
+VisCellCycle(
+  object,
+  genes_s,
+  genes_g2m,
+  reduction = "umap",
+  dims = 1:10,
+  palette = "C",
+  alpha = 0.8
+)
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
 
-\item{s.genes}{Character vector for S phase genes.}
+\item{genes_s}{Character vector for S phase genes.}
 
-\item{g2m.genes}{Character vector for G2/M phase genes.}
+\item{genes_g2m}{Character vector for G2/M phase genes.}
 
 \item{reduction}{Reduction name for overlay.}
 
 \item{dims}{Dimensions for neighbor graph.}
+
+\item{palette}{Palette.}
+
+\item{alpha}{Points and bars alpha.}
 }
 \value{
 A list with updated object and patchwork plot.
@@ -24,8 +36,33 @@ A list with updated object and patchwork plot.
 Score cell cycle and visualize on embedding and distribution.
 }
 \examples{
-obj <- SeuratVisProExample()
-s.genes <- paste0('G', 1:10); g2m.genes <- paste0('G', 11:20)
-res <- VisCellCycle(obj, s.genes, g2m.genes)
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+genes_s <- paste0('G', 1:10); genes_g2m <- paste0('G', 11:20)
+
+res <- VisCellCycle(
+  obj,
+  genes_s,
+  genes_g2m,
+  reduction = "umap",
+  dims = 1:10,
+  palette = "C",
+  alpha = 0.8)
+
 res$plot
+res$cluster
+res$bar
+
+}
+\author{
+benben-miao
 }

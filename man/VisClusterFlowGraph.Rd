@@ -4,7 +4,15 @@
 \alias{VisClusterFlowGraph}
 \title{Cluster centroid flow graph on embeddings}
 \usage{
-VisClusterFlowGraph(object, group.by = "seurat_clusters", reduction = "umap")
+VisClusterFlowGraph(
+  object,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  palette = "C",
+  point_size = 7,
+  point_alpha = 0.9,
+  label_size = 7
+)
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
@@ -12,6 +20,14 @@ VisClusterFlowGraph(object, group.by = "seurat_clusters", reduction = "umap")
 \item{group.by}{Metadata column for cluster identity.}
 
 \item{reduction}{Reduction name, default 'umap'.}
+
+\item{palette}{Palette.}
+
+\item{point_size}{Point size.}
+
+\item{point_alpha}{Point alpha.}
+
+\item{label_size}{Label size.}
 }
 \value{
 A ggplot with centroid nodes and MST edges.
@@ -20,7 +36,28 @@ A ggplot with centroid nodes and MST edges.
 Build a minimum spanning tree over cluster centroids on UMAP/PCA and draw arrows to visualize putative transitions.
 }
 \examples{
-obj <- SeuratVisProExample(n_cells = 300, n_genes = 800, n_clusters = 3)
-p <- VisClusterFlowGraph(obj, group.by = 'seurat_clusters')
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisClusterFlowGraph(
+   obj,
+   group.by = "seurat_clusters",
+   reduction = "umap",
+   palette = "C",
+   point_size = 7,
+   point_alpha = 0.9,
+   label_size = 5)
 p
+
+}
+\author{
+benben-miao
 }

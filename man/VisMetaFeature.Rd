@@ -10,7 +10,11 @@ VisMetaFeature(
   group.by = "seurat_clusters",
   nbin = 24,
   min.size = 3,
-  palette = NULL
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
 )
 }
 \arguments{
@@ -25,6 +29,14 @@ VisMetaFeature(
 \item{min.size}{Minimum gene set size to keep.}
 
 \item{palette}{Optional fill palette.}
+
+\item{violin_width}{Violin width.}
+
+\item{violin_alpha}{Violin alpha.}
+
+\item{box_width}{Box width.}
+
+\item{box_alpha}{Box alpha.}
 }
 \value{
 A list with updated object and ggplot boxplots.
@@ -33,8 +45,36 @@ A list with updated object and ggplot boxplots.
 Compute module scores for multiple gene sets and visualize across groups.
 }
 \examples{
-obj <- SeuratVisProExample()
-sets <- list(SetA = paste0('G', 1:10), SetB = paste0('G', 11:20))
-res <- VisMetaFeature(obj, feature_sets = sets, group.by = 'seurat_clusters')
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+sets <- list(
+  SetA = paste0('G', 1:10),
+  SetB = paste0('G', 11:20))
+
+res <- VisMetaFeature(
+  obj,
+  feature_sets = sets,
+  group.by = "seurat_clusters",
+  nbin = 24,
+  min.size = 3,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5)
+
 res$plot
+
+}
+\author{
+benben-miao
 }

@@ -9,7 +9,10 @@ VisEmbeddingContour(
   group.by = "seurat_clusters",
   reduction = "umap",
   levels = 5,
-  palette = NULL
+  palette = "C",
+  point_size = 1,
+  point_alpha = 0.5,
+  contour_alpha = 0.1
 )
 }
 \arguments{
@@ -22,6 +25,12 @@ VisEmbeddingContour(
 \item{levels}{Number of contour levels.}
 
 \item{palette}{Optional manual palette for groups.}
+
+\item{point_size}{Point size.}
+
+\item{point_alpha}{Point alpha.}
+
+\item{contour_alpha}{Contour alpha.}
 }
 \value{
 A ggplot with contours.
@@ -30,6 +39,29 @@ A ggplot with contours.
 Overlay 2D density contours for groups on UMAP/PCA to highlight boundaries.
 }
 \examples{
-obj <- SeuratVisProExample()
-VisEmbeddingContour(obj, group.by = 'seurat_clusters')
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisEmbeddingContour(
+  obj,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  levels = 5,
+  palette = "C",
+  point_size = 1,
+  point_alpha = 0.5,
+  contour_alpha = 0.1)
+p
+
+}
+\author{
+benben-miao
 }

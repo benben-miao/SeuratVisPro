@@ -9,9 +9,11 @@ VisGeneCoexpHive(
   genes,
   reduction = "pca",
   threshold = 0.2,
-  low_color = "steelblue",
-  mid_color = "grey80",
-  high_color = "firebrick"
+  palette = "C",
+  point_size = 3,
+  point_alpha = 0.8,
+  label_size = 3,
+  curve_alpha = 0.5
 )
 }
 \arguments{
@@ -23,11 +25,15 @@ VisGeneCoexpHive(
 
 \item{threshold}{Minimum absolute correlation to draw edges.}
 
-\item{low_color}{Low color for correlation.}
+\item{palette}{Palette.}
 
-\item{mid_color}{Mid color for correlation.}
+\item{point_size}{Point size.}
 
-\item{high_color}{High color for correlation.}
+\item{point_alpha}{Point alpha.}
+
+\item{label_size}{Label size.}
+
+\item{curve_alpha}{Curve alpha.}
 }
 \value{
 A ggplot radial hive-like network.
@@ -36,6 +42,30 @@ A ggplot radial hive-like network.
 Visualize a radial network of selected genes; edge weight reflects co-expression across cells.
 }
 \examples{
-obj <- SeuratVisProExample()
-VisGeneCoexpHive(obj, genes = paste0('G', 1:12), threshold = 0.2)
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisGeneCoexpHive(
+  obj,
+  genes = paste0("G", 1:100),
+  reduction = "pca",
+  threshold = 0.2,
+  palette = "C",
+  point_size = 3,
+  point_alpha = 0.8,
+  label_size = 3,
+  curve_alpha = 0.5)
+p
+
+}
+\author{
+benben-miao
 }

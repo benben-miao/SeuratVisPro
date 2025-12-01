@@ -33,9 +33,25 @@ A list with \code{summary} data.frame and a ggplot summarizing stability.
 Assess clustering stability by resampling cells and varying resolution.
 }
 \examples{
-obj <- SeuratVisProExample()
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
 
-res <- VisClusterStability(obj, resolution_range = seq(0.2,1.2,0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C")
+res <- VisClusterStability(
+  obj,
+  resolution_range = seq(0.2, 1.2, by = 0.2),
+  dims = 1:10,
+  reps = 5,
+  prop = 0.8,
+  palette = "C")
+
 res$plot
 head(res$summary)
 

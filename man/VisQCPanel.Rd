@@ -6,16 +6,22 @@
 \usage{
 VisQCPanel(
   object,
+  assay = NULL,
   genes_mt = "^MT-",
-  genes_ribo = NULL,
+  genes_ribo = "^RPL|^RPS",
   group.by = NULL,
   interactive = FALSE,
-  assay = NULL,
-  palette = "C"
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
 )
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
+
+\item{assay}{Assay to use; defaults to \code{DefaultAssay(object)}.}
 
 \item{genes_mt}{Regex for mitochondrial genes. Default \verb{^MT-} for human.}
 
@@ -25,9 +31,15 @@ VisQCPanel(
 
 \item{interactive}{If \code{TRUE}, returns interactive plots via \code{plotly::ggplotly}.}
 
-\item{assay}{Assay to use; defaults to \code{DefaultAssay(object)}.}
-
 \item{palette}{Viridis palette option.}
+
+\item{violin_width}{Violin width.}
+
+\item{violin_alpha}{Violin alpha.}
+
+\item{box_width}{Box width.}
+
+\item{box_alpha}{Box alpha.}
 }
 \value{
 A assembled ggplot or a list of interactive plots.
@@ -36,8 +48,29 @@ A assembled ggplot or a list of interactive plots.
 Visualize key QC metrics with customizable thresholds and optional interactivity.
 }
 \examples{
-obj <- SeuratVisProExample()
-p <- VisQCPanel(obj, genes_mt = "^MT-", genes_ribo = "^RPL|^RPS", group.by = "seurat_clusters", interactive = FALSE, palette = "C")
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisQCPanel(
+  obj,
+  assay = NULL,
+  genes_mt = "^MT-",
+  genes_ribo = "^RPL|^RPS",
+  group.by = "seurat_clusters",
+  interactive = FALSE,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5)
 p
 
 }

@@ -8,10 +8,10 @@ VisSpatialOverlay(
   object,
   features,
   image = NULL,
-  alpha = 0.8,
   coords_cols = c("x", "y"),
-  point_size = 0.8,
-  palette = "C"
+  palette = "C",
+  point_size = 2,
+  alpha = 0.5
 )
 }
 \arguments{
@@ -21,13 +21,13 @@ VisSpatialOverlay(
 
 \item{image}{Image key; defaults to active image.}
 
-\item{alpha}{Point alpha.}
-
 \item{coords_cols}{Column names for fallback coordinates.}
+
+\item{palette}{Viridis palette option for color/fill.}
 
 \item{point_size}{Point size for fallback scatter.}
 
-\item{palette}{Viridis palette option for color/fill.}
+\item{alpha}{Point alpha.}
 }
 \value{
 A patchwork of spatial feature plots.
@@ -36,6 +36,28 @@ A patchwork of spatial feature plots.
 Overlay selected features onto spatial images with improved color scales.
 }
 \examples{
-obj <- SeuratVisProExample(n_cells = 300, n_genes = 800, n_clusters = 3, spatial = TRUE)
-VisSpatialOverlay(obj, features = c('G1','G2'))
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = TRUE)
+
+p <- VisSpatialOverlay(
+  obj,
+  features = c("G1", "G2", "G3", "G4"),
+  image = NULL,
+  coords_cols = c("x", "y"),
+  palette = "C",
+  point_size = 2,
+  alpha = 0.5)
+p
+
+}
+\author{
+benben-miao
 }

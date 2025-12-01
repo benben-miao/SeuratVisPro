@@ -4,7 +4,15 @@
 \alias{VisLocalMoran}
 \title{Local Moran's I hotspot for gene expression}
 \usage{
-VisLocalMoran(object, gene, reduction = "umap", k = 15)
+VisLocalMoran(
+  object,
+  gene,
+  reduction = "umap",
+  k = 15,
+  palette = "C",
+  point_size = 2,
+  point_alpha = 0.8
+)
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
@@ -14,6 +22,12 @@ VisLocalMoran(object, gene, reduction = "umap", k = 15)
 \item{reduction}{Reduction name, default 'umap'.}
 
 \item{k}{Number of nearest neighbors.}
+
+\item{palette}{Palette.}
+
+\item{point_size}{Point size.}
+
+\item{point_alpha}{Point alpha.}
 }
 \value{
 A ggplot scatter of local Moran's I values.
@@ -22,7 +36,28 @@ A ggplot scatter of local Moran's I values.
 Compute local Moran's I on UMAP/PCA neighborhoods for a given gene to detect spatial autocorrelation hotspots.
 }
 \examples{
-obj <- SeuratVisProExample(n_cells = 300, n_genes = 800, n_clusters = 3)
-p <- VisLocalMoran(obj, gene = 'G10', k = 15)
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisLocalMoran(
+   obj,
+   gene = 'G10',
+   reduction = "umap",
+   k = 15,
+   palette = "C",
+   point_size = 2,
+   point_alpha = 0.8)
 p
+
+}
+\author{
+benben-miao
 }

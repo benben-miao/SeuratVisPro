@@ -8,7 +8,8 @@ VisHexEntropy(
   object,
   group.by = "seurat_clusters",
   reduction = "umap",
-  bins = 30
+  bins = 30,
+  palette = "C"
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ VisHexEntropy(
 \item{reduction}{Reduction name, default 'umap'.}
 
 \item{bins}{Number of bins per axis.}
+
+\item{palette}{Palette.}
 }
 \value{
 A ggplot heatmap of entropy.
@@ -27,7 +30,26 @@ A ggplot heatmap of entropy.
 Compute per-bin Shannon entropy of group composition on UMAP/PCA and visualize as a tile heatmap.
 }
 \examples{
-obj <- SeuratVisProExample(n_cells = 300, n_genes = 800, n_clusters = 3)
-p <- VisHexEntropy(obj, group.by = 'seurat_clusters', bins = 30)
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+p <- VisHexEntropy(
+  obj,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  bins = 30,
+  palette = "C")
 p
+
+}
+\author{
+benben-miao
 }

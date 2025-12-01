@@ -11,7 +11,11 @@ VisGeneTrend(
   reduction = "umap",
   dims = 1:2,
   smooth.method = "loess",
-  palette = "C"
+  palette = "C",
+  point_size = 2,
+  point_alpha = 0.3,
+  smooth_alpha = 0.3,
+  smooth_linewidth = 1.5
 )
 }
 \arguments{
@@ -28,6 +32,14 @@ VisGeneTrend(
 \item{smooth.method}{Smoothing method ('loess' or 'gam').}
 
 \item{palette}{Viridis palette option.}
+
+\item{point_size}{Point size.}
+
+\item{point_alpha}{Point alpha.}
+
+\item{smooth_alpha}{Smooth alpha.}
+
+\item{smooth_linewidth}{Smooth line width.}
 }
 \value{
 A ggplot with smoothed curves.
@@ -36,7 +48,16 @@ A ggplot with smoothed curves.
 Plot smoothed trends for selected genes across pseudotime approximated from embeddings or grouped by clusters.
 }
 \examples{
-obj <- SeuratVisProExample()
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
 
 p <- VisGeneTrend(
   obj,
@@ -45,7 +66,11 @@ p <- VisGeneTrend(
   reduction = "umap",
   dims = 1:2,
   smooth.method = "loess",
-  palette = "C")
+  palette = "C",
+  point_size = 2,
+  point_alpha = 0.3,
+  smooth_alpha = 0.3,
+  smooth_linewidth = 1.5)
 p
 
 }

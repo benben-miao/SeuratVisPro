@@ -6,22 +6,25 @@
 \usage{
 VisLigRec(
   object,
+  assay = NULL,
   lr_table,
   group.by = "seurat_clusters",
-  assay = NULL,
-  palette = "C"
+  palette = "C",
+  tile_alpha = 0.8
 )
 }
 \arguments{
 \item{object}{A \code{Seurat} object.}
 
+\item{assay}{Assay name.}
+
 \item{lr_table}{Data frame with columns \code{ligand} and \code{receptor}.}
 
 \item{group.by}{Metadata column for groups (e.g., clusters).}
 
-\item{assay}{Assay name.}
-
 \item{palette}{Viridis palette option.}
+
+\item{tile_alpha}{Tile alpha.}
 }
 \value{
 A list with score table and ggplot heatmap.
@@ -30,8 +33,33 @@ A list with score table and ggplot heatmap.
 Compute simple ligand-receptor co-expression scores across groups and visualize as a heatmap.
 }
 \examples{
-obj <- SeuratVisProExample()
-lr <- data.frame(ligand = paste0('G', 1:5), receptor = paste0('G', 6:10))
-res <- VisLigRec(obj, lr_table = lr, group.by = 'seurat_clusters')
+obj <- SeuratVisProExample(
+    n_cells = 300,
+    n_genes = 1000,
+    n_clusters = 10,
+    seed = 123,
+    genes_mt = "^MT-",
+    neighbor_dims = 10,
+    cluster_res = 0.5,
+    umap_dims = 10,
+    spatial = FALSE)
+
+lr <- data.frame(
+  ligand = paste0('G', 1:5),
+  receptor = paste0('G', 6:10))
+
+res <- VisLigRec(
+  obj,
+  assay = NULL,
+  lr_table = lr,
+  group.by = "seurat_clusters",
+  palette = "C",
+  tile_alpha = 0.8)
+
 res$plot
+head(res$scores)
+
+}
+\author{
+benben-miao
 }
