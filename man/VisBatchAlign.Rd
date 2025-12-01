@@ -30,11 +30,18 @@ VisBatchAlign(
 A list with summary data and plot comparing neighbor batch composition.
 }
 \description{
-Quantify and visualize batch mixing in a kNN graph before/after integration.
+Quantify and visualize batch mixing in a KNN graph before/after integration.
 }
 \examples{
 obj <- SeuratVisProExample()
+
 obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
-res <- VisBatchAlign(obj, batch = 'batch', reduction = 'pca')
+
+res <- VisBatchAlign(obj, batch = 'batch', reduction = 'pca', dims = 1:10, k = 20, palette = "C")
 res$plot
+head(res$summary)
+
+}
+\author{
+benben-miao
 }

@@ -6,7 +6,7 @@
 \usage{
 VisMarkerAtlas(
   object,
-  top_n = 10,
+  top_n = 5,
   logfc.threshold = 0.25,
   min.pct = 0.1,
   test.use = "wilcox",
@@ -34,6 +34,12 @@ Find top markers per cluster and visualize as a heatmap.
 }
 \examples{
 obj <- SeuratVisProExample()
-res <- VisMarkerAtlas(obj, top_n = 5)
+
+res <- VisMarkerAtlas(obj, top_n = 5, logfc.threshold = 0.25, min.pct = 0.1, test.use = "wilcox", palette = "C")
 res$plot
+head(res$markers)
+
+}
+\author{
+benben-miao
 }

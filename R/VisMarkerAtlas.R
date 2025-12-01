@@ -4,26 +4,42 @@
 #'
 #' @return A list containing marker table and ggplot heatmap.
 #' @param object A `Seurat` object.
-#' @param top_n Number of top markers per cluster.
-#' @param logfc.threshold Log fold-change threshold for marker finding.
-#' @param min.pct Minimum percent expressed.
-#' @param test.use Differential test (e.g., 'wilcox').
+#' @param markers_top Number of top markers per cluster.
+#' @param logfc_threshold Log fold-change threshold for marker finding.
+#' @param min_percent Minimum percent expressed.
+#' @param test_method Differential test (e.g., 'wilcox').
 #' @param palette Viridis palette option.
 #'
 #' @export
 #'
 #' @examples
-#' obj <- SeuratVisProExample()
+#' obj <- SeuratVisProExample(
+#'     n_cells = 300,
+#'     n_genes = 1000,
+#'     n_clusters = 10,
+#'     seed = 123,
+#'     genes_mt = "^MT-",
+#'     neighbor_dims = 10,
+#'     cluster_res = 0.5,
+#'     umap_dims = 10,
+#'     spatial = FALSE)
 #'
-#' res <- VisMarkerAtlas(obj, top_n = 5, logfc.threshold = 0.25, min.pct = 0.1, test.use = "wilcox", palette = "C")
+#' res <- VisMarkerAtlas(
+#'   obj,
+#'   markers_top = 5,
+#'   logfc_threshold = 0.25,
+#'   min_percent = 0.1,
+#'   test_method = "wilcox",
+#'   palette = "C")
+#'
 #' res$plot
 #' head(res$markers)
 #'
 VisMarkerAtlas <- function(object,
-                           top_n = 5,
-                           logfc.threshold = 0.25,
-                           min.pct = 0.1,
-                           test.use = "wilcox",
+                           markers_top = 5,
+                           logfc_threshold = 0.25,
+                           min_percent = 0.1,
+                           test_method = "wilcox",
                            palette = "C") {
   # Seurat object check
   if (!inherits(object, "Seurat"))
@@ -36,15 +52,15 @@ VisMarkerAtlas <- function(object,
   markers <- Seurat::FindAllMarkers(
     object,
     only.pos = TRUE,
-    logfc.threshold = logfc.threshold,
-    min.pct = min.pct,
-    test.use = test.use
+    logfc.threshold = logfc_threshold,
+    min.pct = min_percent,
+    test.use = test_method
   )
 
   # Markers top N
   top_markers <- markers |>
     dplyr::group_by(cluster) |>
-    dplyr::slice_head(n = top_n) |>
+    dplyr::slice_head(n = markers_top) |>
     dplyr::ungroup()
 
   feats <- unique(top_markers$gene)

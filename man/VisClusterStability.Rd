@@ -34,6 +34,12 @@ Assess clustering stability by resampling cells and varying resolution.
 }
 \examples{
 obj <- SeuratVisProExample()
-res <- VisClusterStability(obj, resolution_range = seq(0.2,1,0.2))
+
+res <- VisClusterStability(obj, resolution_range = seq(0.2,1.2,0.2), dims = 1:10, reps = 5, prop = 0.8, palette = "C")
 res$plot
+head(res$summary)
+
+}
+\author{
+benben-miao
 }

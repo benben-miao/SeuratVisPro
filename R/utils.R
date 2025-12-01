@@ -22,14 +22,14 @@ svpp_theme <- function() {
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_line(color = "black", linewidth = 0.5),
-      axis.text = ggplot2::element_text(size = 8, color = "black"),
+      axis.text = ggplot2::element_text(size = 10, color = "black"),
       axis.title = ggplot2::element_text(
-        size = 10,
+        size = 12,
         face = "bold",
         color = "black"
       ),
-      legend.title = ggplot2::element_text(size = 8, color = "black"),
-      legend.text = ggplot2::element_text(size = 8, color = "black"),
+      legend.title = ggplot2::element_text(size = 10, color = "black"),
+      legend.text = ggplot2::element_text(size = 10, color = "black"),
       legend.key.size = ggplot2::unit(0.5, 'cm')
     )
 }

@@ -37,6 +37,18 @@ Plot smoothed trends for selected genes across pseudotime approximated from embe
 }
 \examples{
 obj <- SeuratVisProExample()
-p <- VisGeneTrend(obj, features = c('G10','G20'), by = 'pseudotime')
+
+p <- VisGeneTrend(
+  obj,
+  features = c("G10", "G20", "G30"),
+  by = "pseudotime",
+  reduction = "umap",
+  dims = 1:2,
+  smooth.method = "loess",
+  palette = "C")
 p
+
+}
+\author{
+benben-miao
 }

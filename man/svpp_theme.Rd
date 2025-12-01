@@ -15,4 +15,7 @@ A \code{ggplot2} theme object.
 \description{
 Consistent theme used across SeuratVisPro plots with optional grid removal.
 }
+\author{
+benben-miao
+}
 \keyword{internal}

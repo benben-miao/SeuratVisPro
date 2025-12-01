@@ -9,15 +9,42 @@
 #' @param dims Dimensions to use.
 #' @param k Number of neighbors.
 #' @param palette Viridis palette option.
+#' @param violin_width Violin width.
+#' @param violin_alpha Violin alpha.
+#' @param box_width Box width.
+#' @param box_alpha Box alpha.
 #'
 #' @export
 #'
 #' @examples
-#' obj <- SeuratVisProExample()
+#' obj <- SeuratVisProExample(
+#'     n_cells = 300,
+#'     n_genes = 1000,
+#'     n_clusters = 10,
+#'     seed = 123,
+#'     genes_mt = "^MT-",
+#'     neighbor_dims = 10,
+#'     cluster_res = 0.5,
+#'     umap_dims = 10,
+#'     spatial = FALSE)
 #'
-#' obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
+#' obj$batch <- sample(
+#'   c('A','B'),
+#'   ncol(obj),
+#'   replace = TRUE)
 #'
-#' res <- VisBatchAlign(obj, batch = 'batch', reduction = 'pca', dims = 1:10, k = 20, palette = "C")
+#' res <- VisBatchAlign(
+#'   obj,
+#'   batch = 'batch',
+#'   reduction = 'pca',
+#'   dims = 1:10,
+#'   k = 20,
+#'   palette = "C",
+#'   violin_width = 0.8,
+#'   violin_alpha = 0.3,
+#'   box_width = 0.3,
+#'   box_alpha = 0.5)
+#'
 #' res$plot
 #' head(res$summary)
 #'
@@ -26,7 +53,11 @@ VisBatchAlign <- function(object,
                           reduction = "pca",
                           dims = 1:10,
                           k = 20,
-                          palette = "C") {
+                          palette = "C",
+                          violin_width = 0.8,
+                          violin_alpha = 0.3,
+                          box_width = 0.3,
+                          box_alpha = 0.5) {
   # Seurat object check
   if (!inherits(object, "Seurat"))
     stop("object must be a Seurat object")
@@ -72,15 +103,15 @@ VisBatchAlign <- function(object,
                          color = batch
                        )) +
     ggplot2::geom_violin(
-      width = 0.8,
+      width = violin_width,
       scale = "width",
       color = NA,
-      alpha = 0.3,
+      alpha = violin_alpha,
       show.legend = TRUE
     ) +
     ggplot2::geom_boxplot(
-      width = 0.3,
-      alpha = 0.5,
+      width = box_width,
+      alpha = box_alpha,
       linewidth = 1,
       show.legend = FALSE
     ) +

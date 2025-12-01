@@ -1,24 +1,42 @@
-#' @title Example Seurat object for demonstrations
-#' @description Generate a small synthetic Seurat object suitable for examples and testing.
+#' @title Generate `Seurat` object for demonstrations
+#' @description Generate a `Seurat` object with basic preprocessing (DefaultAssay, PercentageFeatureSet, NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunUMAP).
 #' @author benben-miao
 #'
-#' @return A `Seurat` object with basic preprocessing (normalization, variable features, PCA, UMAP).
+#' @return A `Seurat` object with basic preprocessing.
 #' @param n_cells Number of cells.
 #' @param n_genes Number of genes.
-#' @param n_clusters Number of simulated clusters.
+#' @param n_clusters Number of clusters.
 #' @param seed Random seed for reproducibility.
+#' @param genes_mt Mitochondrial genes characters.
+#' @param neighbor_dims Neighbor dims.
+#' @param cluster_res Cluster resolution.
+#' @param umap_dims UMAP dims.
 #' @param spatial If TRUE, adds synthetic spatial coordinates 'x','y' to meta.data.
 #'
 #' @export
 #'
 #' @examples
-#' obj <- SeuratVisProExample(n_cells = 400, n_genes = 1000, n_clusters = 4, seed = 123, spatial = FALSE)
+#' obj <- SeuratVisProExample(
+#'     n_cells = 300,
+#'     n_genes = 1000,
+#'     n_clusters = 10,
+#'     seed = 123,
+#'     genes_mt = "^MT-",
+#'     neighbor_dims = 10,
+#'     cluster_res = 0.5,
+#'     umap_dims = 10,
+#'     spatial = FALSE)
+#'
 #' Seurat::DimPlot(obj, group.by = "cluster")
 #'
 SeuratVisProExample <- function(n_cells = 300,
 								n_genes = 1000,
 								n_clusters = 10,
 								seed = 123,
+								genes_mt = "^MT-",
+								neighbor_dims = 10,
+								cluster_res = 0.5,
+								umap_dims = 10,
 								spatial = FALSE) {
 	# Seed
 	set.seed(seed)
@@ -41,7 +59,7 @@ SeuratVisProExample <- function(n_cells = 300,
 	obj <- Seurat::CreateSeuratObject(base_counts)
 	obj$cluster <- clusters
 	assay <- Seurat::DefaultAssay(obj)
-	mt_feats <- grep("^MT-", rownames(obj[[assay]]), value = TRUE)
+	mt_feats <- grep(genes_mt, rownames(obj[[assay]]), value = TRUE)
 	if (length(mt_feats) == 0) {
 		obj$percent.mt <- 0
 	} else {
@@ -53,9 +71,9 @@ SeuratVisProExample <- function(n_cells = 300,
 	obj <- suppressMessages(Seurat::FindVariableFeatures(obj))
 	obj <- suppressMessages(Seurat::ScaleData(obj))
 	obj <- suppressMessages(Seurat::RunPCA(obj))
-	obj <- suppressMessages(Seurat::FindNeighbors(obj, dims = 1:10))
-	obj <- suppressMessages(Seurat::FindClusters(obj, resolution = 0.5))
-	obj <- suppressMessages(Seurat::RunUMAP(obj, dims = 1:10))
+	obj <- suppressMessages(Seurat::FindNeighbors(obj, dims = 1:neighbor_dims))
+	obj <- suppressMessages(Seurat::FindClusters(obj, resolution = cluster_res))
+	obj <- suppressMessages(Seurat::RunUMAP(obj, dims = 1:umap_dims))
 	if (spatial) {
 		coords <- matrix(stats::rnorm(n_cells * 2), ncol = 2)
 		obj$x <- coords[, 1]
