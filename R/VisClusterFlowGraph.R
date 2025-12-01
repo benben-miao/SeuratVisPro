@@ -3,14 +3,14 @@
 #' @author benben-miao
 #'
 #' @return A ggplot with centroid nodes and MST edges.
-#' @param object A `Seurat` object.
-#' @param group.by Metadata column for cluster identity.
-#' @param reduction Reduction name, default 'umap'.
+#' @param object A `Seurat` object; UMAP/PCA is computed when absent.
+#' @param group.by Metadata column for cluster identity. Default: `"seurat_clusters"`.
+#' @param reduction Reduction name (`'umap'` or `'pca'`). Default: `'umap'`.
 #'
-#' @param palette Palette.
-#' @param point_size Point size.
-#' @param point_alpha Point alpha.
-#' @param label_size Label size.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Centroid point size. Default: `7`.
+#' @param point_alpha Centroid point alpha. Default: `0.9`.
+#' @param label_size Label size. Default: `7`.
 #'
 #' @export
 #'

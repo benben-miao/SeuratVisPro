@@ -15,19 +15,19 @@ VisLocalMoran(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; UMAP/PCA is computed when absent.}
 
-\item{gene}{Gene name.}
+\item{gene}{Gene name; must exist in assay data.}
 
-\item{reduction}{Reduction name, default 'umap'.}
+\item{reduction}{Reduction name (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{k}{Number of nearest neighbors.}
+\item{k}{Number of nearest neighbors. Default: \code{15}.}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size.}
+\item{point_size}{Point size. Default: \code{2}.}
 
-\item{point_alpha}{Point alpha.}
+\item{point_alpha}{Point alpha. Default: \code{0.8}.}
 }
 \value{
 A ggplot scatter of local Moran's I values.

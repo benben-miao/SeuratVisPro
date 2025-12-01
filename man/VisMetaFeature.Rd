@@ -18,28 +18,28 @@ VisMetaFeature(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{feature_sets}{A named list of character vectors of genes.}
+\item{feature_sets}{A named list of character vectors of genes; required.}
 
-\item{group.by}{Metadata column for grouping.}
+\item{group.by}{Metadata column for grouping. Default: \code{"seurat_clusters"}.}
 
-\item{nbin}{Number of bins for \code{AddModuleScore}.}
+\item{nbin}{Number of bins for \code{Seurat::AddModuleScore}. Default: \code{24}.}
 
-\item{min.size}{Minimum gene set size to keep.}
+\item{min.size}{Minimum gene set size to keep. Default: \code{3}.}
 
-\item{palette}{Optional fill palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{violin_width}{Violin width.}
+\item{violin_width}{Violin width. Default: \code{0.8}.}
 
-\item{violin_alpha}{Violin alpha.}
+\item{violin_alpha}{Violin alpha. Default: \code{0.3}.}
 
-\item{box_width}{Box width.}
+\item{box_width}{Box width. Default: \code{0.3}.}
 
-\item{box_alpha}{Box alpha.}
+\item{box_alpha}{Box alpha. Default: \code{0.5}.}
 }
 \value{
-A list with updated object and ggplot boxplots.
+A list with \code{object} and \code{plot} (violin+box per gene set).
 }
 \description{
 Compute module scores for multiple gene sets and visualize across groups.

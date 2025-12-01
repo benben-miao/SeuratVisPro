@@ -1,0 +1,336 @@
+---
+title: "SeuratVisPro Tutorial"
+author: "benben-miao"
+date: "2025-12-02"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{SeuratVisPro Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10.00,
+  fig.height = 6.18)
+```
+
+# SeuratVisPro
+
+## 1. Introduction
+
+**SourceCode:** <https://github.com/benben-miao/SeuratVisPro/>
+
+**Website API**: <https://benben-miao.github.io/SeuratVisPro/>
+
+SeuratVisPro is an innovative visualization and diagnostic toolkit for Seurat v5. It provides cluster stability assessment, batch mixing diagnostics, marker atlas visualization, ligand–receptor directional scoring, gene trend plotting, dendrograms with similarity heatmaps, spatial overlays with non-spatial fallbacks, module score visualization, cell cycle views, and more. An optional bs4Dash Shiny app is bundled for interactive exploration.
+
+## 2. Installation
+
+```{r}
+# From GitHub
+# install.packages("remotes")
+# remotes::install_github("benben-miao/SeuratVisPro")
+
+library(SeuratVisPro)
+library(Seurat)
+library(ggplot2)
+```
+
+## 3. Shiny App
+
+```r
+launchSeuratVisPro()
+```
+
+## 4. Usages
+
+### Example Data
+
+```{r SeuratVisProExample}
+obj <- SeuratVisProExample(
+  n_cells = 300,
+  n_genes = 1000,
+  n_clusters = 10,
+  seed = 123,
+  genes_mt = "^MT-",
+  neighbor_dims = 10,
+  cluster_res = 0.5,
+  umap_dims = 10,
+  spatial = FALSE
+)
+
+Seurat::DimPlot(obj, group.by = "cluster")
+```
+
+### VisQCPanel
+
+```{r VisQCPanel}
+p <- VisQCPanel(
+  obj,
+  assay = NULL,
+  genes_mt = "^MT-",
+  genes_ribo = "^RPL|^RPS",
+  group.by = "seurat_clusters",
+  interactive = FALSE,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
+)
+
+p
+```
+
+### VisClusterStability
+
+```{r VisClusterStability}
+res <- VisClusterStability(
+  obj,
+  resolution_range = seq(0.2, 1.2, by = 0.2),
+  dims = 1:10,
+  reps = 5,
+  prop = 0.8,
+  palette = "C"
+)
+
+res$plot
+head(res$summary)
+```
+
+### VisMarkerAtlas
+
+```{r VisMarkerAtlas}
+res <- VisMarkerAtlas(
+  obj,
+  markers_top = 5,
+  logfc_threshold = 0.25,
+  min_percent = 0.1,
+  test_method = "wilcox",
+  palette = "C"
+)
+
+res$plot
+head(res$markers)
+```
+
+### VisBatchAlign
+
+```{r VisBatchAlign}
+obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
+
+res <- VisBatchAlign(
+  obj,
+  batch = 'batch',
+  reduction = 'pca',
+  dims = 1:10,
+  k = 20,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
+)
+
+res$plot
+head(res$summary)
+```
+
+### VisGeneTrend
+
+```{r VisGeneTrend}
+p <- VisGeneTrend(
+  obj,
+  features = c("G10", "G20", "G30"),
+  by = "pseudotime",
+  reduction = "umap",
+  dims = 1:2,
+  smooth.method = "loess",
+  palette = "C",
+  point_size = 2,
+  point_alpha = 0.3,
+  smooth_alpha = 0.3,
+  smooth_linewidth = 1.5
+)
+
+p
+```
+
+### VisLigRec
+
+```{r VisLigRec}
+lr <- data.frame(ligand = paste0('G', 1:5), receptor = paste0('G', 6:10))
+
+res <- VisLigRec(
+  obj,
+  assay = NULL,
+  lr_table = lr,
+  group.by = "seurat_clusters",
+  palette = "C",
+  tile_alpha = 0.8
+)
+
+res$plot
+head(res$scores)
+```
+
+### VisClusterTree
+
+```{r VisClusterTree}
+p <- VisClusterTree(
+  obj,
+  assay = NULL,
+  group.by = "seurat_clusters",
+  dist.metric = "euclidean",
+  linkage = "complete",
+  show_heatmap = TRUE,
+  palette = "C",
+  tile_alpha = 0.8
+)
+
+p
+```
+
+### VisMetaFeature
+
+```{r VisMetaFeature}
+sets <- list(SetA = paste0('G', 1:10), SetB = paste0('G', 11:20))
+
+res <- VisMetaFeature(
+  obj,
+  feature_sets = sets,
+  group.by = "seurat_clusters",
+  nbin = 24,
+  min.size = 3,
+  palette = "C",
+  violin_width = 0.8,
+  violin_alpha = 0.3,
+  box_width = 0.3,
+  box_alpha = 0.5
+)
+
+res$plot
+```
+
+### VisCellCycle
+
+```{r}
+genes_s <- paste0('G', 1:10)
+genes_g2m <- paste0('G', 11:20)
+
+res <- VisCellCycle(
+  obj,
+  genes_s,
+  genes_g2m,
+  reduction = "umap",
+  dims = 1:10,
+  palette = "C",
+  alpha = 0.8
+)
+
+res$plot
+```
+
+### VisEmbeddingContour
+
+```{r VisEmbeddingContour}
+p <- VisEmbeddingContour(
+  obj,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  levels = 5,
+  palette = "C",
+  point_size = 1,
+  point_alpha = 0.5,
+  contour_alpha = 0.1
+)
+
+p
+```
+
+### VisGeneCoexpHive
+
+```{r VisGeneCoexpHive}
+p <- VisGeneCoexpHive(
+  obj,
+  genes = paste0("G", 1:100),
+  reduction = "pca",
+  threshold = 0.2,
+  palette = "C",
+  point_size = 3,
+  point_alpha = 0.8,
+  label_size = 3,
+  curve_alpha = 0.5
+)
+
+p
+```
+
+### VisSpatialOverlay
+
+```{r VisSpatialOverlay}
+obj_sp <- SeuratVisProExample(n_cells = 300, n_genes = 1000, n_clusters = 10, spatial = TRUE)
+
+p <- VisSpatialOverlay(
+  obj_sp,
+  features = c("G1", "G2", "G3", "G4"),
+  image = NULL,
+  coords_cols = c("x", "y"),
+  palette = "C",
+  point_size = 2,
+  alpha = 0.5
+)
+
+p
+```
+
+### VisHexEntropy
+
+```{r VisHexEntropy}
+p <- VisHexEntropy(
+  obj,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  bins = 30,
+  palette = "C"
+)
+
+p
+```
+
+### VisLocalMoran
+
+```{r}
+p <- VisLocalMoran(
+  obj,
+  gene = 'G10',
+  reduction = "umap",
+  k = 15,
+  palette = "C",
+  point_size = 2,
+  point_alpha = 0.8
+)
+
+p
+```
+
+### VisClusterFlowGraph
+
+```{r}
+p <- VisClusterFlowGraph(
+  obj,
+  group.by = "seurat_clusters",
+  reduction = "umap",
+  palette = "C",
+  point_size = 7,
+  point_alpha = 0.9,
+  label_size = 5
+)
+
+p
+```

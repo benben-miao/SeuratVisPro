@@ -2,14 +2,14 @@
 #' @description Find top markers per cluster and visualize as a heatmap.
 #' @author benben-miao
 #'
-#' @return A list containing marker table and ggplot heatmap.
-#' @param object A `Seurat` object.
-#' @param markers_top Number of top markers per cluster.
-#' @param logfc_threshold Log fold-change threshold for marker finding.
-#' @param min_percent Minimum percent expressed.
-#' @param test_method Differential test (e.g., 'wilcox').
+#' @return A list with `markers` (top markers table) and `plot` (heatmap ggplot).
+#' @param object A `Seurat` object; required.
+#' @param markers_top Number of top markers per cluster. Default: `5`.
+#' @param logfc_threshold Log fold-change threshold for marker finding. Default: `0.25`.
+#' @param min_percent Minimum percent expressed. Default: `0.1`.
+#' @param test_method Differential test method, e.g., `'wilcox'`, `'t'`, `'LR'`. Default: `'wilcox'`.
 #'
-#' @param palette Viridis palette option.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
 #'
 #' @export
 #'

@@ -2,18 +2,18 @@
 #' @description Compute module scores for multiple gene sets and visualize across groups.
 #' @author benben-miao
 #'
-#' @return A list with updated object and ggplot boxplots.
-#' @param object A `Seurat` object.
-#' @param feature_sets A named list of character vectors of genes.
-#' @param group.by Metadata column for grouping.
-#' @param nbin Number of bins for `AddModuleScore`.
-#' @param min.size Minimum gene set size to keep.
+#' @return A list with `object` and `plot` (violin+box per gene set).
+#' @param object A `Seurat` object; required.
+#' @param feature_sets A named list of character vectors of genes; required.
+#' @param group.by Metadata column for grouping. Default: `"seurat_clusters"`.
+#' @param nbin Number of bins for `Seurat::AddModuleScore`. Default: `24`.
+#' @param min.size Minimum gene set size to keep. Default: `3`.
 #'
-#' @param palette Optional fill palette.
-#' @param violin_width Violin width.
-#' @param violin_alpha Violin alpha.
-#' @param box_width Box width.
-#' @param box_alpha Box alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param violin_width Violin width. Default: `0.8`.
+#' @param violin_alpha Violin alpha. Default: `0.3`.
+#' @param box_width Box width. Default: `0.3`.
+#' @param box_alpha Box alpha. Default: `0.5`.
 #'
 #' @export
 #'

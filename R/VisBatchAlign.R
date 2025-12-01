@@ -2,18 +2,18 @@
 #' @description Quantify and visualize batch mixing in a KNN graph before/after integration.
 #' @author benben-miao
 #'
-#' @return A list with summary data and plot comparing neighbor batch composition.
-#' @param object A `Seurat` object.
-#' @param batch Column name in `meta.data` indicating batch.
-#' @param reduction Dimensional reduction to use for kNN (e.g., 'pca' or 'umap').
-#' @param dims Dimensions to use.
-#' @param k Number of neighbors.
+#' @return A list with `summary` (per-cell mixing proportion) and `plot` (violin+box).
+#' @param object A `Seurat` object; required.
+#' @param batch Column in `object@meta.data` indicating batch; required.
+#' @param reduction Reduction for kNN computation, `'pca'` or `'umap'`. Default: `'pca'`.
+#' @param dims Integer vector of dimensions used. Default: `1:10`.
+#' @param k Number of neighbors. Default: `20`.
 #'
-#' @param palette Viridis palette option.
-#' @param violin_width Violin width.
-#' @param violin_alpha Violin alpha.
-#' @param box_width Box width.
-#' @param box_alpha Box alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param violin_width Violin width. Default: `0.8`.
+#' @param violin_alpha Violin alpha. Default: `0.3`.
+#' @param box_width Box width. Default: `0.3`.
+#' @param box_alpha Box alpha. Default: `0.5`.
 #'
 #' @export
 #'

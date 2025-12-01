@@ -14,20 +14,20 @@ VisClusterStability(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object with PCA computed.}
+\item{object}{A \code{Seurat} object. PCA is computed when absent.}
 
-\item{resolution_range}{Numeric vector of resolutions, e.g., \code{seq(0.2, 1.2, by=0.2)}.}
+\item{resolution_range}{Numeric vector of resolutions. Default: \code{seq(0.2, 1.2, by = 0.2)}.}
 
-\item{dims}{PCA dimensions to use.}
+\item{dims}{Integer vector of PCA dimensions used. Default: \code{1:10}.}
 
-\item{reps}{Number of resampling repetitions.}
+\item{reps}{Number of resampling repetitions. Default: \code{5}.}
 
-\item{prop}{Proportion of cells to sample per repetition.}
+\item{prop}{Proportion of cells sampled per repetition. Default: \code{0.8}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 }
 \value{
-A list with \code{summary} data.frame and a ggplot summarizing stability.
+A list with \code{summary} (data.frame) and \code{plot} (ggplot) for stability.
 }
 \description{
 Assess clustering stability by resampling cells and varying resolution.

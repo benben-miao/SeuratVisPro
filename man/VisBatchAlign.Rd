@@ -18,28 +18,28 @@ VisBatchAlign(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{batch}{Column name in \code{meta.data} indicating batch.}
+\item{batch}{Column in \code{object@meta.data} indicating batch; required.}
 
-\item{reduction}{Dimensional reduction to use for kNN (e.g., 'pca' or 'umap').}
+\item{reduction}{Reduction for kNN computation, \code{'pca'} or \code{'umap'}. Default: \code{'pca'}.}
 
-\item{dims}{Dimensions to use.}
+\item{dims}{Integer vector of dimensions used. Default: \code{1:10}.}
 
-\item{k}{Number of neighbors.}
+\item{k}{Number of neighbors. Default: \code{20}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{violin_width}{Violin width.}
+\item{violin_width}{Violin width. Default: \code{0.8}.}
 
-\item{violin_alpha}{Violin alpha.}
+\item{violin_alpha}{Violin alpha. Default: \code{0.3}.}
 
-\item{box_width}{Box width.}
+\item{box_width}{Box width. Default: \code{0.3}.}
 
-\item{box_alpha}{Box alpha.}
+\item{box_alpha}{Box alpha. Default: \code{0.5}.}
 }
 \value{
-A list with summary data and plot comparing neighbor batch composition.
+A list with \code{summary} (per-cell mixing proportion) and \code{plot} (violin+box).
 }
 \description{
 Quantify and visualize batch mixing in a KNN graph before/after integration.

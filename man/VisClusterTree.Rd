@@ -16,21 +16,21 @@ VisClusterTree(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{assay}{Assay name.}
+\item{assay}{Assay name. Default: \code{Seurat::DefaultAssay(object)}.}
 
-\item{group.by}{Metadata column for cluster identity.}
+\item{group.by}{Metadata column for cluster identity. Default: \code{"seurat_clusters"}.}
 
-\item{dist.metric}{Distance metric: 'euclidean' or 'correlation'.}
+\item{dist.metric}{Distance metric: \code{'euclidean'} or \code{'correlation'}. Default: \code{'euclidean'}.}
 
-\item{linkage}{Linkage method, e.g., 'complete','average','ward.D2'.}
+\item{linkage}{Linkage method (e.g., \code{'complete'}, \code{'average'}, \code{'ward.D2'}). Default: \code{'complete'}.}
 
-\item{show_heatmap}{If TRUE, append a pairwise similarity heatmap under the tree.}
+\item{show_heatmap}{Append pairwise similarity heatmap under the tree. Default: \code{TRUE}.}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{tile_alpha}{Tile alpha.}
+\item{tile_alpha}{Tile alpha. Default: \code{0.8}.}
 }
 \value{
 A ggplot dendrogram (or patchwork with heatmap).

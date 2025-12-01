@@ -16,21 +16,21 @@ VisEmbeddingContour(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object with UMAP or PCA.}
+\item{object}{A \code{Seurat} object; UMAP/PCA is computed when absent.}
 
-\item{group.by}{Metadata column for grouping.}
+\item{group.by}{Metadata column for grouping. Default: \code{"seurat_clusters"}.}
 
-\item{reduction}{Reduction name, default 'umap'.}
+\item{reduction}{Reduction name (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{levels}{Number of contour levels.}
+\item{levels}{Number of contour levels. Default: \code{5}.}
 
-\item{palette}{Optional manual palette for groups.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size.}
+\item{point_size}{Point size. Default: \code{1}.}
 
-\item{point_alpha}{Point alpha.}
+\item{point_alpha}{Point alpha. Default: \code{0.5}.}
 
-\item{contour_alpha}{Contour alpha.}
+\item{contour_alpha}{Contour alpha. Default: \code{0.1}.}
 }
 \value{
 A ggplot with contours.

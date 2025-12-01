@@ -14,20 +14,20 @@ VisLigRec(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{assay}{Assay name.}
+\item{assay}{Assay name. Default: \code{Seurat::DefaultAssay(object)}.}
 
-\item{lr_table}{Data frame with columns \code{ligand} and \code{receptor}.}
+\item{lr_table}{Data frame with columns \code{ligand} and \code{receptor}; required.}
 
-\item{group.by}{Metadata column for groups (e.g., clusters).}
+\item{group.by}{Metadata column for groups (e.g., clusters). Default: \code{"seurat_clusters"}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{tile_alpha}{Tile alpha.}
+\item{tile_alpha}{Tile alpha. Default: \code{0.8}.}
 }
 \value{
-A list with score table and ggplot heatmap.
+A list with \code{scores} (data.frame) and \code{plot} (heatmap ggplot).
 }
 \description{
 Compute simple ligand-receptor co-expression scores across groups and visualize as a heatmap.

@@ -2,18 +2,18 @@
 #' @description Visualize key QC metrics with customizable thresholds and optional interactivity.
 #' @author benben-miao
 #'
-#' @return A assembled ggplot or a list of interactive plots.
-#' @param object A `Seurat` object.
-#' @param genes_mt Regex for mitochondrial genes. Default `^MT-` for human.
-#' @param genes_ribo Regex for ribosomal genes (e.g., `^RPL|^RPS`).
-#' @param group.by Column in `object@meta.data` used for grouping.
-#' @param interactive If `TRUE`, returns interactive plots via `plotly::ggplotly`.
-#' @param assay Assay to use; defaults to `DefaultAssay(object)`.
-#' @param palette Viridis palette option.
-#' @param violin_width Violin width.
-#' @param violin_alpha Violin alpha.
-#' @param box_width Box width.
-#' @param box_alpha Box alpha.
+#' @return A ggplot patchwork (or a `plotly` subplot when `interactive=TRUE`).
+#' @param object A `Seurat` object; required.
+#' @param genes_mt Regex for mitochondrial genes. Default: `"^MT-"`.
+#' @param genes_ribo Regex for ribosomal genes (e.g., `"^RPL|^RPS"`). Default: `NULL` (skip ribosomal panel when `NULL`).
+#' @param group.by Column in `object@meta.data` used for grouping. Default: `"seurat_clusters"` if present, else identities or a single group.
+#' @param interactive Whether to return interactive plots via `plotly::ggplotly`. Default: `FALSE`.
+#' @param assay Assay name to use. Default: `Seurat::DefaultAssay(object)`.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`. Allowed: `"A"`–`"H"`.
+#' @param violin_width Width of violin geoms. Default: `0.8`.
+#' @param violin_alpha Alpha of violin geoms. Default: `0.3`.
+#' @param box_width Width of boxplot geoms. Default: `0.3`.
+#' @param box_alpha Alpha of boxplot geoms. Default: `0.5`.
 #'
 #' @export
 #'

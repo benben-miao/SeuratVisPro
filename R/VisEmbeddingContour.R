@@ -3,15 +3,15 @@
 #' @author benben-miao
 #'
 #' @return A ggplot with contours.
-#' @param object A `Seurat` object with UMAP or PCA.
-#' @param group.by Metadata column for grouping.
-#' @param reduction Reduction name, default 'umap'.
-#' @param levels Number of contour levels.
+#' @param object A `Seurat` object; UMAP/PCA is computed when absent.
+#' @param group.by Metadata column for grouping. Default: `"seurat_clusters"`.
+#' @param reduction Reduction name (`'umap'` or `'pca'`). Default: `'umap'`.
+#' @param levels Number of contour levels. Default: `5`.
 #'
-#' @param palette Optional manual palette for groups.
-#' @param point_size Point size.
-#' @param point_alpha Point alpha.
-#' @param contour_alpha Contour alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Point size. Default: `1`.
+#' @param point_alpha Point alpha. Default: `0.5`.
+#' @param contour_alpha Contour alpha. Default: `0.1`.
 #'
 #' @export
 #'

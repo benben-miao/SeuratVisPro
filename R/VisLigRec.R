@@ -2,14 +2,14 @@
 #' @description Compute simple ligand-receptor co-expression scores across groups and visualize as a heatmap.
 #' @author benben-miao
 #'
-#' @return A list with score table and ggplot heatmap.
-#' @param object A `Seurat` object.
-#' @param lr_table Data frame with columns `ligand` and `receptor`.
-#' @param group.by Metadata column for groups (e.g., clusters).
-#' @param assay Assay name.
+#' @return A list with `scores` (data.frame) and `plot` (heatmap ggplot).
+#' @param object A `Seurat` object; required.
+#' @param lr_table Data frame with columns `ligand` and `receptor`; required.
+#' @param group.by Metadata column for groups (e.g., clusters). Default: `"seurat_clusters"`.
+#' @param assay Assay name. Default: `Seurat::DefaultAssay(object)`.
 #'
-#' @param palette Viridis palette option.
-#' @param tile_alpha Tile alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param tile_alpha Tile alpha. Default: `0.8`.
 #'
 #' @export
 #'

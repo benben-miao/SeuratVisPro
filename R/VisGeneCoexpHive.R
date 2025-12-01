@@ -3,16 +3,16 @@
 #' @author benben-miao
 #'
 #' @return A ggplot radial hive-like network.
-#' @param object A `Seurat` object.
-#' @param genes Character vector of genes.
-#' @param reduction Reduction to position genes radially by loading (PCA).
-#' @param threshold Minimum absolute correlation to draw edges.
+#' @param object A `Seurat` object; required.
+#' @param genes Character vector of genes; must contain ≥3 present in the assay.
+#' @param reduction Reduction used to position genes radially by loading (`'pca'`). Default: `'pca'`.
+#' @param threshold Minimum absolute correlation to draw edges. Default: `0.2`.
 #'
-#' @param palette Palette.
-#' @param point_size Point size.
-#' @param point_alpha Point alpha.
-#' @param label_size Label size.
-#' @param curve_alpha Curve alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Node point size. Default: `3`.
+#' @param point_alpha Node point alpha. Default: `0.8`.
+#' @param label_size Label size. Default: `3`.
+#' @param curve_alpha Edge curve alpha. Default: `0.5`.
 #'
 #' @export
 #'

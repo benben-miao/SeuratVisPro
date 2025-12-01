@@ -1,0 +1,31 @@
+img {
+  margin: 10px 0px;
+  border: 1px solid #cccccc !important;
+  border-radius: 10px !important;
+  box-shadow: 0px 0px 5px #dddddd !important;
+  transition: box-shadow 0.5s ease;
+}
+
+img:hover {
+  box-shadow: 0px 0px 20px #dddddd !important;
+}
+
+div.sourceCode,
+pre.sourceCode,
+code.sourceCode {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 10px !important;
+}
+pre.sourceCode { padding: 1rem !important; overflow-x: auto !important; }
+
+/* Token colors */
+pre.sourceCode .kw { color: #c792ea !important; }
+pre.sourceCode .fu { color: #82aaff !important; }
+pre.sourceCode .st { color: #ecc48d !important; }
+pre.sourceCode .va { color: #d4d4d4 !important; }
+pre.sourceCode .op { color: #89ddff !important; }
+pre.sourceCode .co { color: #697098 !important; font-style: italic !important; }
+pre.sourceCode .fl { color: #f78c6c !important; }
+pre.sourceCode .cn { color: #ff5370 !important; }

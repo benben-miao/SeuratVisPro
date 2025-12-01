@@ -15,8 +15,18 @@ if (requireNamespace("SeuratVisPro", quietly = TRUE)) {
   }
 }
 
-# Create example object
-obj <- SeuratVisProExample(n_cells = 400, n_genes = 800, n_clusters = 4, spatial = TRUE)
+# Create example object (aligned with README examples)
+obj <- SeuratVisProExample(
+  n_cells = 300,
+  n_genes = 1000,
+  n_clusters = 10,
+  seed = 123,
+  genes_mt = "^MT-",
+  neighbor_dims = 10,
+  cluster_res = 0.5,
+  umap_dims = 10,
+  spatial = TRUE
+)
 obj$batch <- sample(c('A','B'), ncol(obj), replace = TRUE)
 
 # Check bs4Dash
@@ -45,7 +55,6 @@ ui <- bs4DashPage(
       bs4SidebarMenuItem("Module Score", tabName = "ms", icon = icon("layer-group")),
       bs4SidebarMenuItem("Cell Cycle", tabName = "cc", icon = icon("spinner")),
       bs4SidebarMenuItem("Embedding Contour", tabName = "ec", icon = icon("draw-polygon")),
-      bs4SidebarMenuItem("Ranked Dotmap", tabName = "rd", icon = icon("dot-circle")),
       bs4SidebarMenuItem("Coexp Hive", tabName = "ch", icon = icon("braille")),
       bs4SidebarMenuItem("Spatial Overlay", tabName = "sp", icon = icon("map"))
       ,bs4SidebarMenuItem("Hex Entropy", tabName = "hex", icon = icon("th"))
@@ -221,22 +230,7 @@ ui <- bs4DashPage(
                  )
       ),
 
-      # ---- Ranked Dotmap Tab ----
-      bs4TabItem(tabName = "rd",
-                 fluidRow(
-                   column(width = 4,
-                          bs4Card(title = "Parameters", status = "primary", solidHeader = TRUE,
-                                  numericInput("rd_topn", "Top N per Group", value = 6, min = 1),
-                                  selectInput("rd_group", "Group by", choices = colnames(obj@meta.data), selected = "seurat_clusters")
-                          )
-                   ),
-                   column(width = 8,
-                          bs4Card(title = "Ranked Dotmap", status = "info", solidHeader = TRUE,
-                                  plotOutput("rd_plot", height = "600px")
-                          )
-                   )
-                 )
-      ),
+      
 
       # ---- Coexp Hive Tab ----
       bs4TabItem(tabName = "ch",
@@ -329,36 +323,36 @@ server <- function(input, output, session) {
 
   output$stab_plot <- renderPlot({
     res <- seq(input$resMin, input$resMax, by = input$resStep)
-    r <- VisClusterStability(obj, resolution_range = res, reps = input$reps)
+    r <- VisClusterStability(obj, resolution_range = res, dims = 1:10, reps = input$reps, prop = 0.8, palette = "C")
     print(r$plot)
   })
   output$stab_table <- renderDT({
     res <- seq(input$resMin, input$resMax, by = input$resStep)
-    r <- VisClusterStability(obj, resolution_range = res, reps = input$reps)
+    r <- VisClusterStability(obj, resolution_range = res, dims = 1:10, reps = input$reps, prop = 0.8, palette = "C")
     datatable(r$summary, options = list(scrollY = "150px", pageLength = 5))
   })
 
   output$marker_plot <- renderPlot({
-    r <- VisMarkerAtlas(obj, top_n = input$topn)
+    r <- VisMarkerAtlas(obj, markers_top = input$topn)
     print(r$plot)
   })
   output$marker_table <- renderDT({
-    r <- VisMarkerAtlas(obj, top_n = input$topn)
+    r <- VisMarkerAtlas(obj, markers_top = input$topn)
     datatable(r$markers, options = list(scrollY = "150px", pageLength = 5))
   })
 
   output$batch_plot <- renderPlot({
-    r <- VisBatchAlign(obj, batch = input$batch)
+    r <- VisBatchAlign(obj, batch = input$batch, reduction = 'pca', dims = 1:10, k = 20, palette = "C")
     print(r$plot)
   })
   output$batch_table <- renderDT({
-    r <- VisBatchAlign(obj, batch = input$batch)
+    r <- VisBatchAlign(obj, batch = input$batch, reduction = 'pca', dims = 1:10, k = 20, palette = "C")
     datatable(r$summary, options = list(scrollY = "150px", pageLength = 5))
   })
 
   output$trend_plot <- renderPlot({
     feats <- trimws(unlist(strsplit(input$genes, ",")))
-    p <- VisGeneTrend(obj, features = feats, by = input$trendBy)
+    p <- VisGeneTrend(obj, features = feats, by = input$trendBy, reduction = 'umap', dims = 1:2, smooth.method = 'loess', palette = 'C')
     print(p)
   })
 
@@ -369,7 +363,7 @@ server <- function(input, output, session) {
   output$lr_plot <- renderPlot({
     lr <- lr_demo()
     req(lr)
-    r <- VisLigRec(obj, lr_table = lr, group.by = input$lr_group)
+    r <- VisLigRec(obj, lr_table = lr, group.by = input$lr_group, palette = 'C', tile_alpha = 0.8)
     print(r$plot)
   })
   output$lr_table <- renderDT({
@@ -389,35 +383,33 @@ server <- function(input, output, session) {
   output$cc_plot <- renderPlot({
     s.genes <- trimws(unlist(strsplit(input$sGenes, ",")))
     g2m.genes <- trimws(unlist(strsplit(input$g2mGenes, ",")))
-    r <- VisCellCycle(obj, s.genes = s.genes, g2m.genes = g2m.genes)
+    r <- VisCellCycle(obj, genes_s = s.genes, genes_g2m = g2m.genes)
     print(r$plot)
   })
 
   output$ec_plot <- renderPlot({
-    print(VisEmbeddingContour(obj, group.by = input$ec_group))
+    print(VisEmbeddingContour(obj, group.by = input$ec_group, reduction = 'umap', levels = 5, palette = 'C'))
   })
 
-  output$rd_plot <- renderPlot({
-    print(VisRankedDotmap(obj, group.by = input$rd_group, top_n = input$rd_topn))
-  })
+  
 
   output$ch_plot <- renderPlot({
     genes <- trimws(unlist(strsplit(input$ch_genes, ",")))
-    print(VisGeneCoexpHive(obj, genes = genes, threshold = input$ch_thr))
+    print(VisGeneCoexpHive(obj, genes = genes, reduction = 'pca', threshold = input$ch_thr, palette = 'C'))
   })
 
   output$sp_plot <- renderPlot({
     feats <- trimws(unlist(strsplit(input$sp_feats, ",")))
-    print(VisSpatialOverlay(obj, features = feats))
+    print(VisSpatialOverlay(obj, features = feats, image = NULL, coords_cols = c('x','y'), palette = 'C', point_size = 2, alpha = 0.5))
   })
   output$hex_plot <- renderPlot({
-    print(VisHexEntropy(obj, group.by = input$hex_group, bins = input$hex_bins))
+    print(VisHexEntropy(obj, group.by = input$hex_group, reduction = 'umap', bins = input$hex_bins, palette = 'C'))
   })
   output$lisa_plot <- renderPlot({
-    print(VisLocalMoran(obj, gene = input$lisa_gene, k = input$lisa_k))
+    print(VisLocalMoran(obj, gene = input$lisa_gene, reduction = 'umap', k = input$lisa_k, palette = 'C', point_size = 2, point_alpha = 0.8))
   })
   output$flow_plot <- renderPlot({
-    print(VisClusterFlowGraph(obj, group.by = input$flow_group))
+    print(VisClusterFlowGraph(obj, group.by = input$flow_group, reduction = 'umap', palette = 'C', point_size = 7, point_alpha = 0.9, label_size = 5))
   })
 }
 

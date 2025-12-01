@@ -19,30 +19,30 @@ VisGeneTrend(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object with UMAP or PCA.}
+\item{object}{A \code{Seurat} object; UMAP/PCA is computed when absent.}
 
-\item{features}{Character vector of gene names.}
+\item{features}{Character vector of gene names; required.}
 
-\item{by}{Either 'pseudotime' or a metadata column to group by.}
+\item{by}{Either \code{'pseudotime'} or a metadata column to group by. Default: \code{'pseudotime'}.}
 
-\item{reduction}{Reduction to use for pseudotime ('umap' or 'pca').}
+\item{reduction}{Reduction used for pseudotime when \code{by='pseudotime'} (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{dims}{Dimensions used for pseudotime ranking.}
+\item{dims}{Dimensions used for pseudotime ranking. Default: \code{1:2}.}
 
-\item{smooth.method}{Smoothing method ('loess' or 'gam').}
+\item{smooth.method}{Smoothing method: \code{'loess'} or \code{'gam'}. Default: \code{'loess'}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size.}
+\item{point_size}{Point size. Default: \code{2}.}
 
-\item{point_alpha}{Point alpha.}
+\item{point_alpha}{Point alpha. Default: \code{0.3}.}
 
-\item{smooth_alpha}{Smooth alpha.}
+\item{smooth_alpha}{Smooth alpha. Default: \code{0.3}.}
 
-\item{smooth_linewidth}{Smooth line width.}
+\item{smooth_linewidth}{Smooth line width. Default: \code{1.5}.}
 }
 \value{
-A ggplot with smoothed curves.
+A ggplot with smoothed curves per gene.
 }
 \description{
 Plot smoothed trends for selected genes across pseudotime approximated from embeddings or grouped by clusters.

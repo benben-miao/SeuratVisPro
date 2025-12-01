@@ -15,19 +15,19 @@ VisClusterFlowGraph(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; UMAP/PCA is computed when absent.}
 
-\item{group.by}{Metadata column for cluster identity.}
+\item{group.by}{Metadata column for cluster identity. Default: \code{"seurat_clusters"}.}
 
-\item{reduction}{Reduction name, default 'umap'.}
+\item{reduction}{Reduction name (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size.}
+\item{point_size}{Centroid point size. Default: \code{7}.}
 
-\item{point_alpha}{Point alpha.}
+\item{point_alpha}{Centroid point alpha. Default: \code{0.9}.}
 
-\item{label_size}{Label size.}
+\item{label_size}{Label size. Default: \code{7}.}
 }
 \value{
 A ggplot with centroid nodes and MST edges.

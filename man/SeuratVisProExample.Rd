@@ -17,26 +17,26 @@ SeuratVisProExample(
 )
 }
 \arguments{
-\item{n_cells}{Number of cells.}
+\item{n_cells}{Number of cells. Default: \code{300}.}
 
-\item{n_genes}{Number of genes.}
+\item{n_genes}{Number of genes. Default: \code{1000}.}
 
-\item{n_clusters}{Number of clusters.}
+\item{n_clusters}{Number of clusters. Default: \code{10}.}
 
-\item{seed}{Random seed for reproducibility.}
+\item{seed}{Random seed for reproducibility. Default: \code{123}.}
 
-\item{genes_mt}{Mitochondrial genes characters.}
+\item{genes_mt}{Regex for mitochondrial genes. Default: \code{"^MT-"}.}
 
-\item{neighbor_dims}{Neighbor dims.}
+\item{neighbor_dims}{Neighbor graph dimensions used in \code{FindNeighbors}. Default: \code{10}.}
 
-\item{cluster_res}{Cluster resolution.}
+\item{cluster_res}{Cluster resolution used in \code{FindClusters}. Default: \code{0.5}.}
 
-\item{umap_dims}{UMAP dims.}
+\item{umap_dims}{UMAP dimensions used in \code{RunUMAP}. Default: \code{10}.}
 
-\item{spatial}{If TRUE, adds synthetic spatial coordinates 'x','y' to meta.data.}
+\item{spatial}{Whether to add synthetic spatial coordinates \code{x},\code{y} to \code{meta.data}. Default: \code{FALSE}.}
 }
 \value{
-A \code{Seurat} object with basic preprocessing.
+A \code{Seurat} object with basic preprocessing steps applied.
 }
 \description{
 Generate a \code{Seurat} object with basic preprocessing (DefaultAssay, PercentageFeatureSet, NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunUMAP).

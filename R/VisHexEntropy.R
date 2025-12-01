@@ -3,12 +3,12 @@
 #' @author benben-miao
 #'
 #' @return A ggplot heatmap of entropy.
-#' @param object A `Seurat` object.
-#' @param group.by Metadata column for groups.
-#' @param reduction Reduction name, default 'umap'.
-#' @param bins Number of bins per axis.
+#' @param object A `Seurat` object; UMAP/PCA is computed when absent.
+#' @param group.by Metadata column for groups. Default: `"seurat_clusters"`.
+#' @param reduction Reduction name (`'umap'` or `'pca'`). Default: `'umap'`.
+#' @param bins Number of bins per axis. Default: `30` (must be ≥2).
 #'
-#' @param palette Palette.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
 #'
 #' @export
 #'

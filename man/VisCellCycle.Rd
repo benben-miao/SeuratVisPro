@@ -15,22 +15,22 @@ VisCellCycle(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{genes_s}{Character vector for S phase genes.}
+\item{genes_s}{Character vector for S phase genes; required.}
 
-\item{genes_g2m}{Character vector for G2/M phase genes.}
+\item{genes_g2m}{Character vector for G2/M phase genes; required.}
 
-\item{reduction}{Reduction name for overlay.}
+\item{reduction}{Reduction name for overlay (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{dims}{Dimensions for neighbor graph.}
+\item{dims}{Dimensions used to compute embedding if needed. Default: \code{1:10}.}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{alpha}{Points and bars alpha.}
+\item{alpha}{Points and bars alpha. Default: \code{0.8}.}
 }
 \value{
-A list with updated object and patchwork plot.
+A list with \code{object}, \code{plot} (patchwork), \code{cluster} (DimPlot) and \code{bar} (distribution).
 }
 \description{
 Score cell cycle and visualize on embedding and distribution.

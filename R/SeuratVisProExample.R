@@ -2,16 +2,16 @@
 #' @description Generate a `Seurat` object with basic preprocessing (DefaultAssay, PercentageFeatureSet, NormalizeData, FindVariableFeatures, ScaleData, RunPCA, FindNeighbors, FindClusters, RunUMAP).
 #' @author benben-miao
 #'
-#' @return A `Seurat` object with basic preprocessing.
-#' @param n_cells Number of cells.
-#' @param n_genes Number of genes.
-#' @param n_clusters Number of clusters.
-#' @param seed Random seed for reproducibility.
-#' @param genes_mt Mitochondrial genes characters.
-#' @param neighbor_dims Neighbor dims.
-#' @param cluster_res Cluster resolution.
-#' @param umap_dims UMAP dims.
-#' @param spatial If TRUE, adds synthetic spatial coordinates 'x','y' to meta.data.
+#' @return A `Seurat` object with basic preprocessing steps applied.
+#' @param n_cells Number of cells. Default: `300`.
+#' @param n_genes Number of genes. Default: `1000`.
+#' @param n_clusters Number of clusters. Default: `10`.
+#' @param seed Random seed for reproducibility. Default: `123`.
+#' @param genes_mt Regex for mitochondrial genes. Default: `"^MT-"`.
+#' @param neighbor_dims Neighbor graph dimensions used in `FindNeighbors`. Default: `10`.
+#' @param cluster_res Cluster resolution used in `FindClusters`. Default: `0.5`.
+#' @param umap_dims UMAP dimensions used in `RunUMAP`. Default: `10`.
+#' @param spatial Whether to add synthetic spatial coordinates `x`,`y` to `meta.data`. Default: `FALSE`.
 #'
 #' @export
 #'

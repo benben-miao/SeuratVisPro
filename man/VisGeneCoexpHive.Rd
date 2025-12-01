@@ -17,23 +17,23 @@ VisGeneCoexpHive(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{genes}{Character vector of genes.}
+\item{genes}{Character vector of genes; must contain ≥3 present in the assay.}
 
-\item{reduction}{Reduction to position genes radially by loading (PCA).}
+\item{reduction}{Reduction used to position genes radially by loading (\code{'pca'}). Default: \code{'pca'}.}
 
-\item{threshold}{Minimum absolute correlation to draw edges.}
+\item{threshold}{Minimum absolute correlation to draw edges. Default: \code{0.2}.}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size.}
+\item{point_size}{Node point size. Default: \code{3}.}
 
-\item{point_alpha}{Point alpha.}
+\item{point_alpha}{Node point alpha. Default: \code{0.8}.}
 
-\item{label_size}{Label size.}
+\item{label_size}{Label size. Default: \code{3}.}
 
-\item{curve_alpha}{Curve alpha.}
+\item{curve_alpha}{Edge curve alpha. Default: \code{0.5}.}
 }
 \value{
 A ggplot radial hive-like network.

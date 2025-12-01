@@ -2,19 +2,19 @@
 #' @description Plot smoothed trends for selected genes across pseudotime approximated from embeddings or grouped by clusters.
 #' @author benben-miao
 #'
-#' @return A ggplot with smoothed curves.
-#' @param object A `Seurat` object with UMAP or PCA.
-#' @param features Character vector of gene names.
-#' @param by Either 'pseudotime' or a metadata column to group by.
-#' @param reduction Reduction to use for pseudotime ('umap' or 'pca').
-#' @param dims Dimensions used for pseudotime ranking.
-#' @param smooth.method Smoothing method ('loess' or 'gam').
+#' @return A ggplot with smoothed curves per gene.
+#' @param object A `Seurat` object; UMAP/PCA is computed when absent.
+#' @param features Character vector of gene names; required.
+#' @param by Either `'pseudotime'` or a metadata column to group by. Default: `'pseudotime'`.
+#' @param reduction Reduction used for pseudotime when `by='pseudotime'` (`'umap'` or `'pca'`). Default: `'umap'`.
+#' @param dims Dimensions used for pseudotime ranking. Default: `1:2`.
+#' @param smooth.method Smoothing method: `'loess'` or `'gam'`. Default: `'loess'`.
 #'
-#' @param palette Viridis palette option.
-#' @param point_size Point size.
-#' @param point_alpha Point alpha.
-#' @param smooth_alpha Smooth alpha.
-#' @param smooth_linewidth Smooth line width.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Point size. Default: `2`.
+#' @param point_alpha Point alpha. Default: `0.3`.
+#' @param smooth_alpha Smooth alpha. Default: `0.3`.
+#' @param smooth_linewidth Smooth line width. Default: `1.5`.
 #'
 #' @export
 #'

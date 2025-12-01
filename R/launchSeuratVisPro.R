@@ -1,7 +1,7 @@
 #' @title Launch SeuratVisPro Shiny app
 #' @description Launch the bundled Shiny application showcasing key functions and examples.
-#' @param port Port to run the app on.
-#' @param host Host interface.
+#' @param port Port to run the app on. Default: `8888`.
+#' @param host Host interface. Default: `"127.0.0.1"`.
 #' @return No return value; launches a local Shiny app.
 #' @examples
 #' \dontrun{

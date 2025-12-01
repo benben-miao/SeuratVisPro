@@ -14,20 +14,20 @@ VisMarkerAtlas(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{markers_top}{Number of top markers per cluster.}
+\item{markers_top}{Number of top markers per cluster. Default: \code{5}.}
 
-\item{logfc_threshold}{Log fold-change threshold for marker finding.}
+\item{logfc_threshold}{Log fold-change threshold for marker finding. Default: \code{0.25}.}
 
-\item{min_percent}{Minimum percent expressed.}
+\item{min_percent}{Minimum percent expressed. Default: \code{0.1}.}
 
-\item{test_method}{Differential test (e.g., 'wilcox').}
+\item{test_method}{Differential test method, e.g., \code{'wilcox'}, \code{'t'}, \code{'LR'}. Default: \code{'wilcox'}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 }
 \value{
-A list containing marker table and ggplot heatmap.
+A list with \code{markers} (top markers table) and \code{plot} (heatmap ggplot).
 }
 \description{
 Find top markers per cluster and visualize as a heatmap.

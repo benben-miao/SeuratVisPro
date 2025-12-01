@@ -13,15 +13,15 @@ VisHexEntropy(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; UMAP/PCA is computed when absent.}
 
-\item{group.by}{Metadata column for groups.}
+\item{group.by}{Metadata column for groups. Default: \code{"seurat_clusters"}.}
 
-\item{reduction}{Reduction name, default 'umap'.}
+\item{reduction}{Reduction name (\code{'umap'} or \code{'pca'}). Default: \code{'umap'}.}
 
-\item{bins}{Number of bins per axis.}
+\item{bins}{Number of bins per axis. Default: \code{30} (must be ≥2).}
 
-\item{palette}{Palette.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 }
 \value{
 A ggplot heatmap of entropy.

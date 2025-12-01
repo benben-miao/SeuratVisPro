@@ -15,22 +15,22 @@ VisSpatialOverlay(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object; if not spatial, falls back to embedding overlay.}
+\item{object}{A \code{Seurat} object. If no spatial image present, falls back to embedding overlay.}
 
-\item{features}{Character vector of gene features.}
+\item{features}{Character vector of gene features; required.}
 
-\item{image}{Image key; defaults to active image.}
+\item{image}{Image key. Default: active image (\code{NULL}).}
 
-\item{coords_cols}{Column names for fallback coordinates.}
+\item{coords_cols}{Column names for fallback coordinates in \code{meta.data}. Default: \code{c("x","y")}.}
 
-\item{palette}{Viridis palette option for color/fill.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}.}
 
-\item{point_size}{Point size for fallback scatter.}
+\item{point_size}{Point size for fallback scatter. Default: \code{2}.}
 
-\item{alpha}{Point alpha.}
+\item{alpha}{Point alpha. Default: \code{0.5}.}
 }
 \value{
-A patchwork of spatial feature plots.
+A patchwork of spatial feature plots or embedding overlays.
 }
 \description{
 Overlay selected features onto spatial images with improved color scales.

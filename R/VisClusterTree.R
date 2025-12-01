@@ -3,15 +3,15 @@
 #' @author benben-miao
 #'
 #' @return A ggplot dendrogram (or patchwork with heatmap).
-#' @param object A `Seurat` object.
-#' @param group.by Metadata column for cluster identity.
-#' @param assay Assay name.
-#' @param dist.metric Distance metric: 'euclidean' or 'correlation'.
-#' @param linkage Linkage method, e.g., 'complete','average','ward.D2'.
-#' @param show_heatmap If TRUE, append a pairwise similarity heatmap under the tree.
+#' @param object A `Seurat` object; required.
+#' @param group.by Metadata column for cluster identity. Default: `"seurat_clusters"`.
+#' @param assay Assay name. Default: `Seurat::DefaultAssay(object)`.
+#' @param dist.metric Distance metric: `'euclidean'` or `'correlation'`. Default: `'euclidean'`.
+#' @param linkage Linkage method (e.g., `'complete'`, `'average'`, `'ward.D2'`). Default: `'complete'`.
+#' @param show_heatmap Append pairwise similarity heatmap under the tree. Default: `TRUE`.
 #'
-#' @param palette Palette.
-#' @param tile_alpha Tile alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param tile_alpha Tile alpha. Default: `0.8`.
 #'
 #' @export
 #'

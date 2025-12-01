@@ -19,30 +19,30 @@ VisQCPanel(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object.}
+\item{object}{A \code{Seurat} object; required.}
 
-\item{assay}{Assay to use; defaults to \code{DefaultAssay(object)}.}
+\item{assay}{Assay name to use. Default: \code{Seurat::DefaultAssay(object)}.}
 
-\item{genes_mt}{Regex for mitochondrial genes. Default \verb{^MT-} for human.}
+\item{genes_mt}{Regex for mitochondrial genes. Default: \code{"^MT-"}.}
 
-\item{genes_ribo}{Regex for ribosomal genes (e.g., \verb{^RPL|^RPS}).}
+\item{genes_ribo}{Regex for ribosomal genes (e.g., \code{"^RPL|^RPS"}). Default: \code{NULL} (skip ribosomal panel when \code{NULL}).}
 
-\item{group.by}{Column in \code{object@meta.data} used for grouping.}
+\item{group.by}{Column in \code{object@meta.data} used for grouping. Default: \code{"seurat_clusters"} if present, else identities or a single group.}
 
-\item{interactive}{If \code{TRUE}, returns interactive plots via \code{plotly::ggplotly}.}
+\item{interactive}{Whether to return interactive plots via \code{plotly::ggplotly}. Default: \code{FALSE}.}
 
-\item{palette}{Viridis palette option.}
+\item{palette}{Viridis palette option for color/fill. Default: \code{"C"}. Allowed: \code{"A"}–\code{"H"}.}
 
-\item{violin_width}{Violin width.}
+\item{violin_width}{Width of violin geoms. Default: \code{0.8}.}
 
-\item{violin_alpha}{Violin alpha.}
+\item{violin_alpha}{Alpha of violin geoms. Default: \code{0.3}.}
 
-\item{box_width}{Box width.}
+\item{box_width}{Width of boxplot geoms. Default: \code{0.3}.}
 
-\item{box_alpha}{Box alpha.}
+\item{box_alpha}{Alpha of boxplot geoms. Default: \code{0.5}.}
 }
 \value{
-A assembled ggplot or a list of interactive plots.
+A ggplot patchwork (or a \code{plotly} subplot when \code{interactive=TRUE}).
 }
 \description{
 Visualize key QC metrics with customizable thresholds and optional interactivity.

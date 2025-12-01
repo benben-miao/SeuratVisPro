@@ -2,14 +2,14 @@
 #' @description Assess clustering stability by resampling cells and varying resolution.
 #' @author benben-miao
 #'
-#' @return A list with `summary` data.frame and a ggplot summarizing stability.
-#' @param object A `Seurat` object with PCA computed.
-#' @param resolution_range Numeric vector of resolutions, e.g., `seq(0.2, 1.2, by=0.2)`.
-#' @param dims PCA dimensions to use.
-#' @param reps Number of resampling repetitions.
-#' @param prop Proportion of cells to sample per repetition.
+#' @return A list with `summary` (data.frame) and `plot` (ggplot) for stability.
+#' @param object A `Seurat` object. PCA is computed when absent.
+#' @param resolution_range Numeric vector of resolutions. Default: `seq(0.2, 1.2, by = 0.2)`.
+#' @param dims Integer vector of PCA dimensions used. Default: `1:10`.
+#' @param reps Number of resampling repetitions. Default: `5`.
+#' @param prop Proportion of cells sampled per repetition. Default: `0.8`.
 #'
-#' @param palette Viridis palette option.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
 #'
 #' @export
 #'

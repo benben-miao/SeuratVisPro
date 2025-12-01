@@ -1,16 +1,44 @@
 template:
   bootstrap: 5
-  bootswatch: flatly
-url: https://example.com/SeuratVisPro
+  # bootswatch: flatly
+  math-rendering: katex
+  light-switch: true
+  theme: breeze-light
+  params:
+    highlight: dracula
+  bslib:
+    code_font: {google: "JetBrains Mono"}
+  assets:
+    - inst/pkgdown/assets/style.css
+    - inst/pkgdown/extra.css
+
+url: https://github.com/benben-miao/SeuratVisPro
 destination: docs
+
 navbar:
   structure:
-    left: [reference, articles]
-    right: [news]
-articles:
-  - title: Tutorial
-    contents:
-      - SeuratVisPro
+    left: [home, reference, articles]
+    right: [search, github]
+  components:
+    home:
+      text: Home
+      icon: fa-home
+      href: index.html
+    reference:
+      text: Reference
+      icon: fa-passport
+      href: reference/index.html
+    articles:
+      text: Articles
+      icon: fa-file-code
+      menu:
+        - text: Tutorials
+        - text: Tutorials
+          icon: fa-file-code
+          href: articles/Tutorial.html
+        - text: -------
+        - text: Blog
+
 reference:
   - title: Core functions
     contents:
@@ -26,10 +54,7 @@ reference:
       - VisCellCycle
       - SeuratVisProExample
       - launchSeuratVisPro
-  - title: Innovative visuals
-    contents:
       - VisEmbeddingContour
-      - VisRankedDotmap
       - VisGeneCoexpHive
       - VisHexEntropy
       - VisLocalMoran

@@ -3,14 +3,14 @@
 #' @author benben-miao
 #'
 #' @return A ggplot scatter of local Moran's I values.
-#' @param object A `Seurat` object.
-#' @param gene Gene name.
-#' @param reduction Reduction name, default 'umap'.
-#' @param k Number of nearest neighbors.
+#' @param object A `Seurat` object; UMAP/PCA is computed when absent.
+#' @param gene Gene name; must exist in assay data.
+#' @param reduction Reduction name (`'umap'` or `'pca'`). Default: `'umap'`.
+#' @param k Number of nearest neighbors. Default: `15`.
 #'
-#' @param palette Palette.
-#' @param point_size Point size.
-#' @param point_alpha Point alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Point size. Default: `2`.
+#' @param point_alpha Point alpha. Default: `0.8`.
 #'
 #' @export
 #'

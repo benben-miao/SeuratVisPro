@@ -2,15 +2,15 @@
 #' @description Score cell cycle and visualize on embedding and distribution.
 #' @author benben-miao
 #'
-#' @return A list with updated object and patchwork plot.
-#' @param object A `Seurat` object.
-#' @param genes_s Character vector for S phase genes.
-#' @param genes_g2m Character vector for G2/M phase genes.
-#' @param reduction Reduction name for overlay.
-#' @param dims Dimensions for neighbor graph.
+#' @return A list with `object`, `plot` (patchwork), `cluster` (DimPlot) and `bar` (distribution).
+#' @param object A `Seurat` object; required.
+#' @param genes_s Character vector for S phase genes; required.
+#' @param genes_g2m Character vector for G2/M phase genes; required.
+#' @param reduction Reduction name for overlay (`'umap'` or `'pca'`). Default: `'umap'`.
+#' @param dims Dimensions used to compute embedding if needed. Default: `1:10`.
 #'
-#' @param palette Palette.
-#' @param alpha Points and bars alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param alpha Points and bars alpha. Default: `0.8`.
 #'
 #' @export
 #'

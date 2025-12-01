@@ -7,9 +7,9 @@
 launchSeuratVisPro(port = 8888, host = "127.0.0.1")
 }
 \arguments{
-\item{port}{Port to run the app on.}
+\item{port}{Port to run the app on. Default: \code{8888}.}
 
-\item{host}{Host interface.}
+\item{host}{Host interface. Default: \code{"127.0.0.1"}.}
 }
 \value{
 No return value; launches a local Shiny app.

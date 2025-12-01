@@ -2,15 +2,15 @@
 #' @description Overlay selected features onto spatial images with improved color scales.
 #' @author benben-miao
 #'
-#' @return A patchwork of spatial feature plots.
-#' @param object A `Seurat` object; if not spatial, falls back to embedding overlay.
-#' @param features Character vector of gene features.
-#' @param image Image key; defaults to active image.
-#' @param coords_cols Column names for fallback coordinates.
+#' @return A patchwork of spatial feature plots or embedding overlays.
+#' @param object A `Seurat` object. If no spatial image present, falls back to embedding overlay.
+#' @param features Character vector of gene features; required.
+#' @param image Image key. Default: active image (`NULL`).
+#' @param coords_cols Column names for fallback coordinates in `meta.data`. Default: `c("x","y")`.
 #'
-#' @param palette Viridis palette option for color/fill.
-#' @param point_size Point size for fallback scatter.
-#' @param alpha Point alpha.
+#' @param palette Viridis palette option for color/fill. Default: `"C"`.
+#' @param point_size Point size for fallback scatter. Default: `2`.
+#' @param alpha Point alpha. Default: `0.5`.
 #'
 #' @export
 #'
