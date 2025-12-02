@@ -1,0 +1,28 @@
+.nav-sidebar .nav-item>.nav-link {
+	background-color: #000000 !important;
+	border-radius: 10px !important;
+	margin-bottom: 10px !important;
+}
+
+.nav-sidebar .nav-item>.nav-link:hover {
+	background-color: #ffffff !important;
+	color: #000000 !important;
+}
+
+.nav-sidebar>.nav-item>.nav-link.active {
+	background-color: #ff8800 !important;
+}
+
+.card {
+	border-radius: 10px !important;
+}
+
+img {
+	border: 1px solid #eeeeee !important;
+	border-radius: 10px !important;
+	box-shadow: 0px 0px 5px #eeeeee !important;
+}
+
+.content {
+	height: 100vh !important;
+}
