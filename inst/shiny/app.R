@@ -251,11 +251,27 @@ ui <- bs4DashPage(
             textInput("mt", label = "MT Regex", value = "^MT-"),
             textInput("ribo", label = "Ribo Regex", value = "^RPL|^RPS"),
             selectInput(
+              "qc_assay",
+              label = "Assay",
+              choices = names(obj@assays),
+              selected = Seurat::DefaultAssay(obj)
+            ),
+            selectInput(
               "group",
               label = "Group by",
               choices = colnames(obj@meta.data),
               selected = "seurat_clusters"
-            )
+            ),
+            selectInput(
+              "qc_palette",
+              label = "Palette",
+              choices = c("A","B","C","D","E","F","G","H"),
+              selected = "C"
+            ),
+            numericInput("qc_violin_width", "Violin width", value = 0.8, min = 0, step = 0.1),
+            sliderInput("qc_violin_alpha", "Violin alpha", min = 0, max = 1, value = 0.3, step = 0.1),
+            numericInput("qc_box_width", "Box width", value = 0.3, min = 0, step = 0.1),
+            sliderInput("qc_box_alpha", "Box alpha", min = 0, max = 1, value = 0.5, step = 0.1)
           )
         ), column(
           width = 9,
@@ -337,7 +353,11 @@ ui <- bs4DashPage(
             solidHeader = TRUE,
             width = 12,
             height = NULL,
-            numericInput("topn", "Top N Markers", value = 5, min = 1)
+            numericInput("topn", "Top N Markers", value = 5, min = 1),
+            numericInput("logfc", "logFC threshold", value = 0.25, step = 0.05),
+            numericInput("minpct", "Min percent", value = 0.1, step = 0.05),
+            selectInput("test", "Test method", choices = c("wilcox","t","LR"), selected = "wilcox"),
+            selectInput("markers_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C")
           )
         ), column(
           width = 9,
@@ -375,10 +395,17 @@ ui <- bs4DashPage(
               "Batch Column",
               choices = colnames(obj@meta.data),
               selected = "batch"
-            )
+            ),
+            selectInput("batch_reduction", "Reduction", choices = c("pca","umap"), selected = "pca"),
+            numericInput("batch_k", "Neighbors k", value = 20, min = 1),
+            selectInput("batch_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            numericInput("batch_violin_width", "Violin width", value = 0.8, step = 0.1),
+            sliderInput("batch_violin_alpha", "Violin alpha", min = 0, max = 1, value = 0.3, step = 0.1),
+            numericInput("batch_box_width", "Box width", value = 0.3, step = 0.1),
+            sliderInput("batch_box_alpha", "Box alpha", min = 0, max = 1, value = 0.5, step = 0.1)
           )
         ), column(
-          width = 8,
+          width = 9,
           bs4Card(
             title = "Batch Plot",
             status = "danger",
@@ -414,7 +441,12 @@ ui <- bs4DashPage(
               "Trend By",
               choices = c("pseudotime", colnames(obj@meta.data)),
               selected = "pseudotime"
-            )
+            ),
+            selectInput("trend_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            numericInput("trend_point_size", "Point size", value = 2, min = 0.1, step = 0.1),
+            sliderInput("trend_point_alpha", "Point alpha", min = 0, max = 1, value = 0.3, step = 0.1),
+            sliderInput("trend_smooth_alpha", "Smooth alpha", min = 0, max = 1, value = 0.3, step = 0.1),
+            numericInput("trend_smooth_linewidth", "Smooth linewidth", value = 1.5, min = 0.1, step = 0.1)
           )
         ), column(
           width = 9,
@@ -441,11 +473,19 @@ ui <- bs4DashPage(
             height = NULL,
             actionButton("lr_demo", "Load Example LR Table"),
             selectInput(
+              "lr_assay",
+              "Assay",
+              choices = names(obj@assays),
+              selected = Seurat::DefaultAssay(obj)
+            ),
+            selectInput(
               "lr_group",
               "Group by",
               choices = colnames(obj@meta.data),
               selected = "seurat_clusters"
-            )
+            ),
+            selectInput("lr_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            sliderInput("lr_tile_alpha", "Tile alpha", min = 0, max = 1, value = 0.8, step = 0.1)
           )
         ), column(
           width = 9,
@@ -478,14 +518,21 @@ ui <- bs4DashPage(
             solidHeader = TRUE,
             width = 12,
             height = NULL,
-            textInput("setA", "Set A Genes", value = paste0("G", 1:10)),
-            textInput("setB", "Set B Genes", value = paste0("G", 11:20)),
+            textInput("setA", "Set A Genes", value = paste0("G", 1:10, collapse = ",")),
+            textInput("setB", "Set B Genes", value = paste0("G", 11:20, collapse = ",")),
             selectInput(
               "ms_group",
               "Group by",
               choices = colnames(obj@meta.data),
               selected = "seurat_clusters"
-            )
+            ),
+            numericInput("ms_nbin", "nbin", value = 24, min = 1),
+            numericInput("ms_min_size", "min.size", value = 3, min = 1),
+            selectInput("ms_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            numericInput("ms_violin_width", "Violin width", value = 0.8, step = 0.1),
+            sliderInput("ms_violin_alpha", "Violin alpha", min = 0, max = 1, value = 0.3, step = 0.1),
+            numericInput("ms_box_width", "Box width", value = 0.3, step = 0.1),
+            sliderInput("ms_box_alpha", "Box alpha", min = 0, max = 1, value = 0.5, step = 0.1)
           )
         ), column(
           width = 9,
@@ -510,8 +557,12 @@ ui <- bs4DashPage(
             solidHeader = TRUE,
             width = 12,
             height = NULL,
-            textInput("sGenes", "S-phase Genes", value = paste0("G", 1:10)),
-            textInput("g2mGenes", "G2M-phase Genes", value = paste0("G", 11:20))
+            textInput("sGenes", "S-phase Genes", value = paste0("G", 1:10, collapse = ",")),
+            textInput("g2mGenes", "G2M-phase Genes", value = paste0("G", 11:20, collapse = ",")),
+            selectInput("cc_reduction", "Reduction", choices = c("umap","pca"), selected = "umap"),
+            numericInput("cc_dims", "Dims", value = 10, min = 2),
+            selectInput("cc_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            sliderInput("cc_alpha", "Alpha", min = 0, max = 1, value = 0.8, step = 0.1)
           )
         ), column(
           width = 9,
@@ -541,7 +592,12 @@ ui <- bs4DashPage(
               "Group by",
               choices = colnames(obj@meta.data),
               selected = "seurat_clusters"
-            )
+            ),
+            sliderInput("ec_levels", "Levels", min = 1, max = 10, value = 5, step = 1),
+            numericInput("ec_point_size", "Point size", value = 1, min = 0.1, step = 0.1),
+            sliderInput("ec_point_alpha", "Point alpha", min = 0, max = 1, value = 0.5, step = 0.1),
+            sliderInput("ec_contour_alpha", "Contour alpha", min = 0, max = 1, value = 0.1, step = 0.1),
+            selectInput("ec_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C")
           )
         ), column(
           width = 9,
@@ -568,7 +624,7 @@ ui <- bs4DashPage(
             solidHeader = TRUE,
             width = 12,
             height = NULL,
-            textInput("ch_genes", "Genes (comma)", value = paste0("G", 1:12)),
+            textInput("ch_genes", "Genes (comma)", value = paste0("G", 1:12, collapse = ",")),
             numericInput(
               "ch_thr",
               "Correlation Threshold",
@@ -576,7 +632,12 @@ ui <- bs4DashPage(
               min = 0,
               max = 1,
               step = 0.05
-            )
+            ),
+            numericInput("ch_point_size", "Point size", value = 3, min = 0.1, step = 0.1),
+            sliderInput("ch_point_alpha", "Point alpha", min = 0, max = 1, value = 0.8, step = 0.1),
+            numericInput("ch_label_size", "Label size", value = 3, min = 0.1, step = 0.1),
+            sliderInput("ch_curve_alpha", "Curve alpha", min = 0, max = 1, value = 0.5, step = 0.1),
+            selectInput("ch_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C")
           )
         ), column(
           width = 9,
@@ -601,7 +662,10 @@ ui <- bs4DashPage(
             solidHeader = TRUE,
             width = 12,
             height = NULL,
-            textInput("sp_feats", "Features (comma)", value = "G1,G2,G3")
+            textInput("sp_feats", "Features (comma)", value = "G1,G2,G3"),
+            numericInput("sp_point_size", "Point size", value = 2, min = 0.1, step = 0.1),
+            sliderInput("sp_alpha", "Alpha", min = 0, max = 1, value = 0.5, step = 0.1),
+            selectInput("sp_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C")
           )
         ), column(
           width = 9,
@@ -638,7 +702,8 @@ ui <- bs4DashPage(
               max = 60,
               value = 30,
               step = 5
-            )
+            ),
+            selectInput("hex_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C")
           )
         ), column(
           width = 9,
@@ -660,6 +725,8 @@ ui <- bs4DashPage(
             title = "Parameters",
             status = "info",
             solidHeader = TRUE,
+            width = 12,
+            height = NULL,
             textInput("lisa_gene", "Gene", value = "G10"),
             sliderInput(
               "lisa_k",
@@ -668,7 +735,10 @@ ui <- bs4DashPage(
               max = 50,
               value = 15,
               step = 5
-            )
+            ),
+            selectInput("lisa_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            numericInput("lisa_point_size", "Point size", value = 2, min = 0.1, step = 0.1),
+            sliderInput("lisa_point_alpha", "Point alpha", min = 0, max = 1, value = 0.8, step = 0.1)
           )
         ), column(
           width = 9,
@@ -697,7 +767,11 @@ ui <- bs4DashPage(
               "Group by",
               choices = colnames(obj@meta.data),
               selected = "seurat_clusters"
-            )
+            ),
+            selectInput("flow_palette", "Palette", choices = c("A","B","C","D","E","F","G","H"), selected = "C"),
+            numericInput("flow_point_size", "Point size", value = 7, min = 0.1, step = 0.1),
+            sliderInput("flow_point_alpha", "Point alpha", min = 0, max = 1, value = 0.9, step = 0.1),
+            numericInput("flow_label_size", "Label size", value = 5, min = 0.1, step = 0.1)
           )
         ), column(
           width = 9,
@@ -719,13 +793,36 @@ ui <- bs4DashPage(
 # Server logic (unchanged)
 # -----------------------------
 server <- function(input, output, session) {
+  parse_gene_input <- function(s) {
+    if (is.null(s)) return(character())
+    if (length(s) > 1) return(trimws(s))
+    x <- trimws(s)
+    if (grepl("^paste0\\(['\"]G['\"],\\s*\\d+:\\d+\\)$", x)) {
+      a <- as.integer(sub(".*,(\\s*)(\\d+):(\\d+).*", "\\2", x))
+      b <- as.integer(sub(".*,(\\s*)(\\d+):(\\d+).*", "\\3", x))
+      return(paste0("G", a:b))
+    }
+    if (grepl("^c\\((?:\\s*['\"]G\\d+['\"]\\s*,?)+\\)$", x)) {
+      g <- regmatches(x, gregexpr("G\\d+", x))[[1]]
+      return(g)
+    }
+    v <- trimws(unlist(strsplit(x, ",")))
+    v <- v[v != ""]
+    v
+  }
   output$qc_plot <- renderPlot({
     p <- VisQCPanel(
       obj,
+      assay = input$qc_assay,
       genes_mt = input$mt,
       genes_ribo = input$ribo,
       group.by = input$group,
-      interactive = FALSE
+      interactive = FALSE,
+      palette = input$qc_palette,
+      violin_width = input$qc_violin_width,
+      violin_alpha = input$qc_violin_alpha,
+      box_width = input$qc_box_width,
+      box_alpha = input$qc_box_alpha
     )
     print(p)
   })
@@ -756,11 +853,25 @@ server <- function(input, output, session) {
   })
 
   output$marker_plot <- renderPlot({
-    r <- VisMarkerAtlas(obj, markers_top = input$topn)
+    r <- VisMarkerAtlas(
+      obj,
+      markers_top = input$topn,
+      logfc_threshold = input$logfc,
+      min_percent = input$minpct,
+      test_method = input$test,
+      palette = input$markers_palette
+    )
     print(r$plot)
   })
   output$marker_table <- renderDT({
-    r <- VisMarkerAtlas(obj, markers_top = input$topn)
+    r <- VisMarkerAtlas(
+      obj,
+      markers_top = input$topn,
+      logfc_threshold = input$logfc,
+      min_percent = input$minpct,
+      test_method = input$test,
+      palette = input$markers_palette
+    )
     datatable(r$markers, options = list(scrollY = "150px", pageLength = 10))
   })
 
@@ -768,10 +879,14 @@ server <- function(input, output, session) {
     r <- VisBatchAlign(
       obj,
       batch = input$batch,
-      reduction = 'pca',
+      reduction = input$batch_reduction,
       dims = 1:10,
-      k = 20,
-      palette = "C"
+      k = input$batch_k,
+      palette = input$batch_palette,
+      violin_width = input$batch_violin_width,
+      violin_alpha = input$batch_violin_alpha,
+      box_width = input$batch_box_width,
+      box_alpha = input$batch_box_alpha
     )
     print(r$plot)
   })
@@ -779,16 +894,20 @@ server <- function(input, output, session) {
     r <- VisBatchAlign(
       obj,
       batch = input$batch,
-      reduction = 'pca',
+      reduction = input$batch_reduction,
       dims = 1:10,
-      k = 20,
-      palette = "C"
+      k = input$batch_k,
+      palette = input$batch_palette,
+      violin_width = input$batch_violin_width,
+      violin_alpha = input$batch_violin_alpha,
+      box_width = input$batch_box_width,
+      box_alpha = input$batch_box_alpha
     )
     datatable(r$summary, options = list(scrollY = "150px", pageLength = 10))
   })
 
   output$trend_plot <- renderPlot({
-    feats <- trimws(unlist(strsplit(input$genes, ",")))
+    feats <- parse_gene_input(input$genes)
     p <- VisGeneTrend(
       obj,
       features = feats,
@@ -796,12 +915,19 @@ server <- function(input, output, session) {
       reduction = 'umap',
       dims = 1:2,
       smooth.method = 'loess',
-      palette = 'C'
+      palette = input$trend_palette,
+      point_size = input$trend_point_size,
+      point_alpha = input$trend_point_alpha,
+      smooth_alpha = input$trend_smooth_alpha,
+      smooth_linewidth = input$trend_smooth_linewidth
     )
     print(p)
   })
 
-  lr_demo <- reactiveVal(NULL)
+  lr_demo <- reactiveVal(data.frame(
+    ligand = paste0('G', 1:5),
+    receptor = paste0('G', 6:10)
+  ))
   observeEvent(input$lr_demo, {
     lr_demo(data.frame(
       ligand = paste0('G', 1:5),
@@ -813,35 +939,58 @@ server <- function(input, output, session) {
     req(lr)
     r <- VisLigRec(
       obj,
+      assay = input$lr_assay,
       lr_table = lr,
       group.by = input$lr_group,
-      palette = 'C',
-      tile_alpha = 0.8
+      palette = input$lr_palette,
+      tile_alpha = input$lr_tile_alpha
     )
     print(r$plot)
   })
   output$lr_table <- renderDT({
     lr <- lr_demo()
     req(lr)
-    r <- VisLigRec(obj, lr_table = lr, group.by = input$lr_group)
+    r <- VisLigRec(
+      obj,
+      assay = input$lr_assay,
+      lr_table = lr,
+      group.by = input$lr_group,
+      palette = input$lr_palette,
+      tile_alpha = input$lr_tile_alpha
+    )
     datatable(r$scores, options = list(scrollY = "150px", pageLength = 10))
   })
 
   output$ms_plot <- renderPlot({
-    setA <- trimws(unlist(strsplit(input$setA, ",")))
-    setB <- trimws(unlist(strsplit(input$setB, ",")))
+    setA <- parse_gene_input(input$setA)
+    setB <- parse_gene_input(input$setB)
     r <- VisMetaFeature(
       obj,
       feature_sets = list(SetA = setA, SetB = setB),
-      group.by = input$ms_group
+      group.by = input$ms_group,
+      nbin = input$ms_nbin,
+      min.size = input$ms_min_size,
+      palette = input$ms_palette,
+      violin_width = input$ms_violin_width,
+      violin_alpha = input$ms_violin_alpha,
+      box_width = input$ms_box_width,
+      box_alpha = input$ms_box_alpha
     )
     print(r$plot)
   })
 
   output$cc_plot <- renderPlot({
-    s.genes <- trimws(unlist(strsplit(input$sGenes, ",")))
-    g2m.genes <- trimws(unlist(strsplit(input$g2mGenes, ",")))
-    r <- VisCellCycle(obj, genes_s = s.genes, genes_g2m = g2m.genes)
+    s.genes <- parse_gene_input(input$sGenes)
+    g2m.genes <- parse_gene_input(input$g2mGenes)
+    r <- VisCellCycle(
+      obj,
+      genes_s = s.genes,
+      genes_g2m = g2m.genes,
+      reduction = input$cc_reduction,
+      dims = 1:input$cc_dims,
+      palette = input$cc_palette,
+      alpha = input$cc_alpha
+    )
     print(r$plot)
   })
 
@@ -851,8 +1000,11 @@ server <- function(input, output, session) {
         obj,
         group.by = input$ec_group,
         reduction = 'umap',
-        levels = 5,
-        palette = 'C'
+        levels = input$ec_levels,
+        palette = input$ec_palette,
+        point_size = input$ec_point_size,
+        point_alpha = input$ec_point_alpha,
+        contour_alpha = input$ec_contour_alpha
       )
     )
   })
@@ -860,29 +1012,33 @@ server <- function(input, output, session) {
 
 
   output$ch_plot <- renderPlot({
-    genes <- trimws(unlist(strsplit(input$ch_genes, ",")))
+    genes <- parse_gene_input(input$ch_genes)
     print(
       VisGeneCoexpHive(
         obj,
         genes = genes,
         reduction = 'pca',
         threshold = input$ch_thr,
-        palette = 'C'
+        palette = input$ch_palette,
+        point_size = input$ch_point_size,
+        point_alpha = input$ch_point_alpha,
+        label_size = input$ch_label_size,
+        curve_alpha = input$ch_curve_alpha
       )
     )
   })
 
   output$sp_plot <- renderPlot({
-    feats <- trimws(unlist(strsplit(input$sp_feats, ",")))
+    feats <- parse_gene_input(input$sp_feats)
     print(
       VisSpatialOverlay(
         obj,
         features = feats,
         image = NULL,
         coords_cols = c('x', 'y'),
-        palette = 'C',
-        point_size = 2,
-        alpha = 0.5
+        palette = input$sp_palette,
+        point_size = input$sp_point_size,
+        alpha = input$sp_alpha
       )
     )
   })
@@ -893,7 +1049,7 @@ server <- function(input, output, session) {
         group.by = input$hex_group,
         reduction = 'umap',
         bins = input$hex_bins,
-        palette = 'C'
+        palette = input$hex_palette
       )
     )
   })
@@ -904,9 +1060,9 @@ server <- function(input, output, session) {
         gene = input$lisa_gene,
         reduction = 'umap',
         k = input$lisa_k,
-        palette = 'C',
-        point_size = 2,
-        point_alpha = 0.8
+        palette = input$lisa_palette,
+        point_size = input$lisa_point_size,
+        point_alpha = input$lisa_point_alpha
       )
     )
   })
@@ -916,10 +1072,10 @@ server <- function(input, output, session) {
         obj,
         group.by = input$flow_group,
         reduction = 'umap',
-        palette = 'C',
-        point_size = 7,
-        point_alpha = 0.9,
-        label_size = 5
+        palette = input$flow_palette,
+        point_size = input$flow_point_size,
+        point_alpha = input$flow_point_alpha,
+        label_size = input$flow_label_size
       )
     )
   })
